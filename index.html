@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Activity Tracker</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>Activity Tracker</h1>
+  <form id="usernameForm">
+    <label for="username">Enter GitHub username:</label>
+    <input type="text" id="username" required>
+    <button type="submit">Get Activity</button>
+  </form>
+
+  <h2>Github Contributions</h2>
+  <table id="githubTable"></table>
+
+  <h2>LeetCode Submissions</h2>
+  <table id="leetcodeTable"></table>
+
+  <script>
+    const usernameForm = document.getElementById('usernameForm');
+    const githubTable = document.getElementById('githubTable');
+    const leetcodeTable = document.getElementById('leetcodeTable');
+
+    usernameForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('username');
+      const username = usernameInput.value;
+      
+      try {
+        const githubResponse = await fetch(`https://api.github.com/users/${username}/events`);
+        const githubData = await githubResponse.json();
+        showGitHubContributions(githubData);
+
+        const leetcodeResponse = await fetch(`https://leetcode-stats-api.herokuapp.com/${username}`);
+        const leetcodeData = await leetcodeResponse.json();
+        showLeetCodeSubmissions(leetcodeData.submissionCalendar);
+      } catch (error) {
+        console.log('Error fetching data:', error);
+      }
+    });
+
+    function showGitHubContributions(data) {
+      const tableHeader = `<tr><th>Date</th><th>Count</th></tr>`;
+      let tableRows = '';
+      for (const item of data) {
+        if (item.type === 'PushEvent' && item.payload.commits) {
+          const date = new Date(item.created_at).toLocaleDateString();
+          const count = item.payload.commits.length;
+          tableRows += `<tr><td>${date}</td><td>${count}</td></tr>`;
+        }
+      }
+      githubTable.innerHTML = tableHeader + tableRows;
+    }
+
+    function showLeetCodeSubmissions(data) {
+      const tableHeader = `<tr><th>Date</th><th>Count</th></tr>`;
+      let tableRows = '';
+      for (const [timestamp, count] of Object.entries(data)) {
+        const date = new Date(parseInt(timestamp) * 1000).toLocaleDateString();
+        tableRows += `<tr><td>${date}</td><td>${count}</td></tr>`;
+      }
+      leetcodeTable.innerHTML = tableHeader + tableRows;
+    }
+    
+  </script>
+</body>
+</html>
