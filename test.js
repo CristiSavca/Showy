@@ -1,23 +1,27 @@
-import pg from 'pg';
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set } from "firebase/database";
 
-// temporary... definitely temporary
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD4eA31CvlbSmjjrXAsa_Mco9yc8Atxx2E",
+  authDomain: "test-464fe.firebaseapp.com",
+  projectId: "test-464fe",
+  storageBucket: "test-464fe.appspot.com",
+  messagingSenderId: "1031268965349",
+  appId: "1:1031268965349:web:c7ceff2fd24e6a32fb2d0c",
+  measurementId: "G-ZNT013652Q",
+	databaseURL: "https://test-464fe-default-rtdb.firebaseio.com/"
+};
 
-// i'm going to be calling the main db "showy-db"
-// my problem is: i can create that db on my machine and connect to it fine, but if i push this test.js file to github, that db isn't hosted on there
-// so i'm trying to figure out how to get a db on that github
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// as well as username, and password for the account connecting to the db
-const client = new pg.Client( {
-	database: 'showy-db',
-	host: 'localhost',
-	user: 'postgres',
-	password: '1234',
-	port: 5432,
-});
+function createUser(username, email, userId) {
+	set(ref(db, 'users/' + userId), {
+		username: username,
+		email: email
+	});		
+}
 
-// this will spit out an error that the db doesn't exist
-await client.connect();
- 
-const res = await client.query('SELECT $1::text as message', ['Hello world!']);
-console.log(res.rows[0].message);
-await client.end();
+
+createUser("test","email@example.com", 1);
