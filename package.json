@@ -1,0 +1,11 @@
+{
+	"name": "showy",
+	"version": "0.0.0",
+	"description": "blank",
+	"type": "module",
+	"main": "server.js",
+	"dependencies": {
+		"pg": "^8.11.3",
+		"postgresql": "0.0.1"
+	}
+}
