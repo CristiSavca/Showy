@@ -5,6 +5,8 @@
 	"type": "module",
 	"main": "server.js",
 	"dependencies": {
-		"firebase": "^10.4.0"
+		"firebase": "^10.4.0",
+		"firebase-admin": "^11.10.1",
+		"prompt-sync": "^4.2.0"
 	}
 }
