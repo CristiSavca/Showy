@@ -8,8 +8,10 @@
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, count, doc } from "firebase/firestore";
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const admin = require("firebase-admin");
+var serviceAccount = require("D:/Downloads/test-464fe-firebase-adminsdk-wqeuq-b21eb5d582.json");
+const { getFirestore, Timestamp, FieldValue, Filter, collection, doc } = require('firebase-admin/firestore');
 const prompt = require('prompt-sync')();
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -25,17 +27,22 @@ const firebaseConfig = {
 };
 
 // the whole database
-const app = initializeApp(firebaseConfig);
+const app = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://test-464fe-default-rtdb.firebaseio.com"
+});
+
 var db = getFirestore(app);
 
 // "Table" of users
 const usersCollection = db.collection('users');
 
 
-db.createUser = function (username, email) {
+db.createUser = async function (username, email, display) {
 	var data = {
 		username: username,
-		email: email
+		email: email,
+		display: display
 	}
 	
 	// HERE IS WHERE EVERYTHING IS GOING WRONG: i'm trying every single possible way of adding to firestore
@@ -43,27 +50,15 @@ db.createUser = function (username, email) {
 	// (that module is from the realtime database, not firestore) but as of yet googling returns literally
 	// nothing...
 	
-	console.log(typeof usersCollection);
-	
-	var res = usersCollection.add(data);
+	var res = await usersCollection.add(data);
 	// CONSOLE OUTPUT: REMOVE LATER
-	console.log('Added ', username, ' with email ', email, ' and ID ', res.id, ' to database.');
+	console.log('Added ', username, ' with email ', email, ' and display name ', display, ' to database.');
 }
 
 // loop to add users en masse, IDs will be assigned automatically
 // test using console to add users
-var exit = false;
-while (!exit) {
-	var user = prompt("Enter username:");
-	var email = prompt("Enter email:");
+var user = prompt("Enter username: ");
+var display = prompt("Enter display name: ");
+var email = prompt("Enter email: ");
 	
-	db.createUser(user, email);
-	
-	var exitResponse = "";
-	while (exitResponse != "y" || exitResponse != "n") {
-		exitResponse = prompt("Exit? y/n");
-	}
-	if (exitResponse == "y") {
-		exit = true;
-	}
-}
+db.createUser(user, email, display);
