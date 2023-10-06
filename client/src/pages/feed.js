@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from 'react-router-dom';
+
 import FeedPosts from "../components/FeedComponents/FeedPosts";
 import useFetchData from "../components/FeedComponents/useFetchData";
+import CreateUserPost from "../components/FeedComponents/CreateUserPost";
 
 const Feed = () => {
     //const {backendData, errorMessage} = useFetchData("/posts");
@@ -36,7 +39,9 @@ const Feed = () => {
             <h1>
                 Posts & stuff...
             </h1>
-
+            <Link to={`/posts/create-post`}>
+                <button>Create post</button>
+            </Link>
             <FeedPosts backendData={backendData} />
         </div>
     );
