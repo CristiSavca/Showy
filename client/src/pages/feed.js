@@ -1,5 +1,7 @@
 import React from "react";
- 
+import FeedPosts from './components/FeedComponents/Feed';
+import useFetchData from './useFetchData';
+
 const Feed = () => {
     const {backendData, errorMessage} = useFetchData("/posts");
 
@@ -9,7 +11,7 @@ const Feed = () => {
                 Posts & stuff...
             </h1>
 
-            <Feed backendData={backendData} />
+            <FeedPosts backendData={backendData} />
         </div>
     );
 };
