@@ -70,8 +70,8 @@
 }
 
 .whole-post-box {
-  width: 45rem;
-  height: 30rem;
+  width: 50rem;
+  height: 25rem;
   padding: 2rem;
   margin: auto;
   border: 0.3rem;
@@ -79,27 +79,6 @@
   border-color: black;
   background-color: azure;
   margin-bottom: 2rem;
-}
-
-.whole-post-content {
-  box-sizing: content-box;
-  height: 50%;
-  padding-left: 10px;
-  padding-right: 10px;
-  border: 0.3 rem;
-  border-style: solid;
-  border-color: black;
-  background-color: lightblue;
-  margin-bottom: 1rem;
-}
-
-.whole-post-bottom-content {
-  box-sizing: content-box;
-  /* height: 5%; */
-  border: 0.3rem;
-  border-style: solid;
-  border-color: black;
-  margin-bottom: 1 rem;
 }
 
 .whole-post-comment-box {
