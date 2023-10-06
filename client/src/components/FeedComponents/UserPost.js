@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-export default function UserPost({postId, username, header, postText, likes}) {
+const UserPost = ({postId, username, header, postText, likes}) => {
     const [likedPost, setLikedPost] = useState(false);
     const [totalLikes, setTotalLikes] = useState(likes);
 
@@ -27,8 +27,8 @@ export default function UserPost({postId, username, header, postText, likes}) {
               <thead></thead>
               <tbody>
                 <tr>
-                <th><button onClick={() => changeLikes()}>like {totalLikes}</button></th>
-                <th><button>comment</button></th>
+                    <th><button onClick={() => changeLikes()}>like {totalLikes}</button></th>
+                    <th><button>comment</button></th>
                 </tr>
               </tbody>
             </table>
@@ -36,3 +36,5 @@ export default function UserPost({postId, username, header, postText, likes}) {
       </div>
     )
 }
+
+export default UserPost;
