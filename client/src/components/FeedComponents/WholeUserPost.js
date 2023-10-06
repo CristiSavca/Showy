@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import useFetchData from './useFetchData';
+import UserPost from "./UserPost";
 
-export default function WholeUserPost() {
+const WholeUserPost = () => {
     const {id} = useParams();
 
     const {backendData, errorMessage} = useFetchData("/posts/" + id);
@@ -17,22 +18,11 @@ export default function WholeUserPost() {
   
     return (
       <div className="whole-post-box">
-        <p>{backendData.username}</p>
-        <h2>{backendData.header}</h2>
-        <div className="whole-post-content">
-          <p>{backendData.postText} </p>
-        </div>
-        <div className="whole-post-bottom-content">
-          <table>
-            <thead></thead>
-            <tbody>
-              <tr>
-                <th><button onClick={() => setCount(1)}>like {backendData.likes}</button></th>
-                <th><button>comment</button></th>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <UserPost key={backendData.key}
+                    username={backendData.username} 
+                        header={backendData.header} 
+                            postText={backendData.postText} 
+                                likes={backendData.likes} postId={backendData.key}/>
         <div className="whole-post-comment-box">
           <textarea className="whole-post-comment-textarea" value={textContent} onChange={e => setTextContent(e.target.value)}></textarea>
           <button onClick={() => createNewComment(textContent)}>Comment</button>
@@ -41,3 +31,5 @@ export default function WholeUserPost() {
       </div>
     )
   }
+
+  export default WholeUserPost;
