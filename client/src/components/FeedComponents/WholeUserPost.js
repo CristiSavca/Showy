@@ -6,8 +6,18 @@ import UserPost from "./UserPost";
 const WholeUserPost = () => {
     const {id} = useParams();
 
-    const {backendData, errorMessage} = useFetchData("/posts/" + id);
+    // const {backendData, errorMessage} = useFetchData("/posts/" + id);
 
+    const backendData = {
+
+            "key": "Person2-Dogs-are-good-pets", 
+            "username": "Person2", 
+            "header": "Dogs are good pets", 
+            "postText": "Source? me", 
+            "likes": 3
+
+    }
+    
     const [count, setCount] = useState(0);
     const [saveComment, setComment] = useState("");
     const [textContent, setTextContent] = useState("");
