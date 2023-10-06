@@ -4,7 +4,7 @@ import useFetchData from './useFetchData';
 import UserPost from "./UserPost";
 
 const WholeUserPost = () => {
-    const {id} = useParams();
+    // const {id} = useParams();
 
     // const {backendData, errorMessage} = useFetchData("/posts/" + id);
 
@@ -33,6 +33,8 @@ const WholeUserPost = () => {
                         header={backendData.header} 
                             postText={backendData.postText} 
                                 likes={backendData.likes} postId={backendData.key}/>
+
+        {/* {console.log(id)}; */}
         <div className="whole-post-comment-box">
           <textarea className="whole-post-comment-textarea" value={textContent} onChange={e => setTextContent(e.target.value)}></textarea>
           <button onClick={() => createNewComment(textContent)}>Comment</button>
