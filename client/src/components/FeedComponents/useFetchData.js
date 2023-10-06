@@ -1,6 +1,6 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
-export default function useFetchData(endpoint) {
+const useFetchData = (endpoint) => {
 
     const [backendData, setBackendData] = useState({});
     const [errorMessage, setErrorMessage] = useState(null);
@@ -16,6 +16,7 @@ export default function useFetchData(endpoint) {
         })
         .then(data => {
             setBackendData(data);
+            console.log(data);
         })
         .catch(error => {
             setErrorMessage(error.message);
@@ -26,3 +27,5 @@ export default function useFetchData(endpoint) {
 
     return {backendData, errorMessage};
 }
+
+export default useFetchData;
