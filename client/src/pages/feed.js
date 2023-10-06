@@ -1,6 +1,6 @@
 import React from "react";
-import FeedPosts from './components/FeedComponents/Feed';
-import useFetchData from './useFetchData';
+import FeedPosts from "../components/FeedComponents/FeedPosts";
+import useFetchData from "../components/FeedComponents/useFetchData";
 
 const Feed = () => {
     const {backendData, errorMessage} = useFetchData("/posts");
