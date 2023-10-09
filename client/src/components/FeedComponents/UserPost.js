@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+// Add link to username remember
+
 const UserPost = ({postId, username, header, postText, likes}) => {
     const [likedPost, setLikedPost] = useState(false);
     const [totalLikes, setTotalLikes] = useState(likes);

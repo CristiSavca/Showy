@@ -105,6 +105,7 @@
 }
 
 .comment {
+  padding: 1rem;
   border: 0.3rem;
   border-style: solid;
   border-color: black;
