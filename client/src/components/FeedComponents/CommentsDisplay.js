@@ -3,7 +3,7 @@ import Comment from "./Comment";
 const CommentsDisplay = ({commentsData}) => {
     return(
         <div className="comments-display">
-            {(typeof backendData.posts === "undefined") ? (<p>Loading...</p>)
+            {(typeof commentsData === "undefined") ? (<p>Loading...</p>)
             :(commentsData.map((comment) => <Comment key={comment.key}
                                                   username={comment.username} 
                                                       commentText={comment.postText} 
@@ -14,4 +14,4 @@ const CommentsDisplay = ({commentsData}) => {
     )
 }
 
-export default DisplayComments;
+export default CommentsDisplay;
