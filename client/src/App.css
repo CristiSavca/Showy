@@ -71,7 +71,7 @@
 
 .whole-post-box {
   width: 50rem;
-  height: 25rem;
+  /* height: 25rem; */
   padding: 2rem;
   margin: auto;
   border: 0.3rem;
@@ -99,6 +99,12 @@
 
 .links-around-feed {
   padding: 1rem;
+  border: 0.3rem;
+  border-style: solid;
+  border-color: black;
+}
+
+.comment {
   border: 0.3rem;
   border-style: solid;
   border-color: black;
