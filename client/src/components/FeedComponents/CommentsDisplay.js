@@ -8,7 +8,8 @@ const CommentsDisplay = ({commentsData}) => {
                                                   username={comment.username} 
                                                       commentText={comment.postText} 
                                                         likes={comment.likes} 
-                                                            commentId={comment.key}/>)
+                                                            commentId={comment.key}
+                                                                replies={comment.replies}/>)
           )}
         </div>
     )
