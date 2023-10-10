@@ -6,7 +6,7 @@ const CommentsDisplay = ({commentsData}) => {
             {(typeof commentsData === "undefined") ? (<p>Loading...</p>)
             :(commentsData.map((comment) => <Comment key={comment.key}
                                                   username={comment.username} 
-                                                      commentText={comment.postText} 
+                                                      commentText={comment.commentText} 
                                                         likes={comment.likes} 
                                                             commentId={comment.key}
                                                                 replies={comment.replies}/>)
