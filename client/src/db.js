@@ -215,7 +215,7 @@ while (repeat) {
 			console.log(`Logged into ${user} with user ID ${currentId}`);
 			const newUsername = prompt("Enter new username: ");
 			
-			var result = await changeUsername(currentId, user, newUsername);
+			var result = await changeUsername(currentId, newUsername);
 			
 			if (result) {
 				console.log("Successful change!");
