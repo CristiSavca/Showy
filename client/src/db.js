@@ -40,24 +40,36 @@ async function getUserByUsername(username) {
 	}
 }
 
-async function usernameExists(username) {
+/*
+*	Returns the object containing to the user based on the id supplied.
+* Returns null if an entry matching that ID does not exist.
+*/
+async function getUserById(id) {
+	const query = await usersCollection.where('id', '==', id).get();
+	
+	if (query.docs.empty) {
+		return null;
+	}
+	else {
+		const snapshot = query.docs[0];
+		return snapshot;
+	}
+}
+
+// Returns true/false if the username exists in the database.
+async function usernameTaken(username) {
 	const result = (await getUserByUsername(username) != null);
 	return result;
 }
 
 /*
-*	addUserToDatabase
 *	username, email, display: string
-* Throws an error if the username already exists.
+* Returns false if the username already exists, or is not in the correct format (currently just alphanumeric)
 */
 async function addUserToDatabase(username, email, display) {
 	
-	if (!usernameExists) {
-		throw new Error("This username already exists in the database.");
-	}
-	
-	if (!allowableUsername) {
-		throw new Error("This name is not alphanumeric!");
+	if (usernameTaken(username) || !allowableUsername(username)) {
+		return false;
 	}
 	
 	const data = {
@@ -71,8 +83,30 @@ async function addUserToDatabase(username, email, display) {
 	const amendment = await newUser.update({id: res.id});
 	// TODO CONSOLE OUTPUT: REMOVE LATER
 	console.log('Added ', username, ' with email ', email, ' and display name ', display, ' to database. ID:', res.id);
+	return true;
 }
 
+/*
+*	Returns false if new username is taken
+* Returns true when successful
+*/
+async function changeUsername(id, newUser) {
+	const duplicateUsername = await usernameTaken(newUser);
+	if (duplicateUsername) {
+		return false;
+	}
+	else {
+		const usernameUpdate = usersCollection.doc(id);
+		const res = await usernameUpdate.update({username: newUser});
+		return true;
+	}
+
+}
+
+/*
+* Returns true if given string is alphanumeric, false if otherwise.
+* Characters of "allowable usernames" will likely change later.
+*/
 function allowableUsername(str) {
   var code, i;
   for (i = 0; i < str.length; i++) {
@@ -86,20 +120,32 @@ function allowableUsername(str) {
   return true;
 };
 
-async function makePost(poster, title, body) {
+/*
+* Adds a post to the database with the given characteristics:
+* Title (string)
+* Body (string)
+* PosterId (string): The user ID that posted this. This will be converted into their ID when the post is made, to track username changes.
+* The time posted and likes will be assigned automatically.
+*/
+async function makePost(posterId, title, body) {
+	
+	const timestamp = admin.firestore.Timestamp.now();
+	const jsTimestamp = timestamp.toDate();
 	
 	const post = {
-		poster: poster,
 		title: title,
 		body: body,
-		likes: 0
+		likes: 0,
+		poster_id: posterId,
+		posted: timestamp
 	}
 	
 	const res = await forumCollection.add(post);
 	const newPost = forumCollection.doc(res.id);
 	const amendment = await newPost.update({id: res.id});
 	
-	console.log(`${title} by ${poster}: ${body}`);
+	console.log(`${title} by user with ID: ${posterId} at ${jsTimestamp}: `);
+	console.log(`${body}`);
 	
 }
 
@@ -110,7 +156,7 @@ var currentId = "";
 
 var repeat = true;
 while (repeat) {
-	var userInput = prompt("(a)ccount, (l)og in, (p)ost, (e)xit: ");
+	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (e)xit: ");
 	
 	// CHECK ACCOUNT INFO
 	if (userInput == "a") {
@@ -118,7 +164,7 @@ while (repeat) {
 			console.log("Not logged into any account.");
 		}
 		else {
-			console.log("Logged into " + user + " with ID " + currentId);
+			console.log(`Logged into ${user} with user ID ${currentId}`);
 		}
 	}
 	
@@ -126,7 +172,7 @@ while (repeat) {
 	if (userInput == "l") {
 		user = prompt("Enter username: ");
 		if (allowableUsername(user)) {
-			const exist = await usernameExists(user);
+			const exist = await usernameTaken(user);
 			if (exist) {
 				console.log ("Username exists! Logging in...");
 				const x = await getUserByUsername(user)
@@ -157,10 +203,29 @@ while (repeat) {
 			const title = prompt("Title of post: ");
 			const body = prompt("Body of post: ");
 			
-			await makePost(user, title, body);
+			await makePost(currentId, title, body);
 		}
 	}
 	
+	if (userInput == "c") {
+		if (user == "" || currentId == "") {
+			console.log("Not logged in!");
+		}
+		else {
+			console.log(`Logged into ${user} with user ID ${currentId}`);
+			const newUsername = prompt("Enter new username: ");
+			
+			var result = await changeUsername(currentId, user, newUsername);
+			
+			if (result) {
+				console.log("Successful change!");
+				user = newUsername;
+			}
+			else {
+				console.log("Something wrong happened (username taken?)");
+			}
+		}
+	}
 	
 	// EXIT
 	if (userInput == "e") {
