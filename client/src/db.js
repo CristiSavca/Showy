@@ -57,25 +57,19 @@ async function getUserById(id) {
 }
 
 // Returns true/false if the username exists in the database.
-async function usernameExists(username) {
+async function usernameTaken(username) {
 	const result = (await getUserByUsername(username) != null);
 	return result;
 }
 
 /*
 *	username, email, display: string
-* Throws an error if the username already exists.
+* Returns false if the username already exists, or is not in the correct format (currently just alphanumeric)
 */
 async function addUserToDatabase(username, email, display) {
 	
-	if (!usernameExists) {
-		throw new Error("This username already exists in the database.");
-		return null;
-	}
-	
-	if (!allowableUsername) {
-		throw new Error("This name is not alphanumeric!");
-		return null;
+	if (usernameTaken(username) || !allowableUsername(username)) {
+		return false;
 	}
 	
 	const data = {
@@ -89,32 +83,25 @@ async function addUserToDatabase(username, email, display) {
 	const amendment = await newUser.update({id: res.id});
 	// TODO CONSOLE OUTPUT: REMOVE LATER
 	console.log('Added ', username, ' with email ', email, ' and display name ', display, ' to database. ID:', res.id);
+	return true;
 }
 
 /*
-*	Asserts if id and oldUser belong to the same username (throws an error if not)
 *	Returns false if new username is taken
-* Returns true when successful (otherwise from false)
+* Returns true when successful
 */
-async function changeUsername(id, oldUser, newUser) {
-	const assertion = await getUserById(id);
-	const assertion2 = await getUserByUsername(oldUser);
-	if (assertion._fieldsProto.username.stringValue != oldUser || id != assertion2._fieldsProto.id.stringValue) {
-		throw new Error("ID and old username do not belong to the same user!");
+async function changeUsername(id, newUser) {
+	const duplicateUsername = await usernameTaken(newUser);
+	if (duplicateUsername) {
+		return false;
 	}
 	else {
-		const duplicateUsername = await usernameExists(newUser);
-		if (duplicateUsername) {
-			return false;
-		}
-		else {
-			const usernameUpdate = usersCollection.doc(id);
-			const res = await usernameUpdate.update({username: newUser});
-			return true;
-		}
+		const usernameUpdate = usersCollection.doc(id);
+		const res = await usernameUpdate.update({username: newUser});
+		return true;
 	}
-}
 
+}
 
 /*
 * Returns true if given string is alphanumeric, false if otherwise.
@@ -134,25 +121,30 @@ function allowableUsername(str) {
 };
 
 /*
-* Returns void. Adds a post to the database with the given characteristics:
+* Adds a post to the database with the given characteristics:
 * Title (string)
 * Body (string)
 * PosterId (string): The user ID that posted this. This will be converted into their ID when the post is made, to track username changes.
+* The time posted and likes will be assigned automatically.
 */
 async function makePost(posterId, title, body) {
+	
+	const timestamp = admin.firestore.Timestamp.now();
+	const jsTimestamp = timestamp.toDate();
 	
 	const post = {
 		title: title,
 		body: body,
 		likes: 0,
-		poster_id: posterId
+		poster_id: posterId,
+		posted: timestamp
 	}
 	
 	const res = await forumCollection.add(post);
 	const newPost = forumCollection.doc(res.id);
 	const amendment = await newPost.update({id: res.id});
 	
-	console.log(`${title} by user with ID: ${posterId}: `);
+	console.log(`${title} by user with ID: ${posterId} at ${jsTimestamp}: `);
 	console.log(`${body}`);
 	
 }
@@ -180,7 +172,7 @@ while (repeat) {
 	if (userInput == "l") {
 		user = prompt("Enter username: ");
 		if (allowableUsername(user)) {
-			const exist = await usernameExists(user);
+			const exist = await usernameTaken(user);
 			if (exist) {
 				console.log ("Username exists! Logging in...");
 				const x = await getUserByUsername(user)
