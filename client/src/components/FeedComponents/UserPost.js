@@ -1,21 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// Add link to username remember
+import LikeButton from './LikeButton';
+
+// Add link to username remember to their profile
 
 const UserPost = ({postId, username, header, postText, likes}) => {
-    const [likedPost, setLikedPost] = useState(false);
-    const [totalLikes, setTotalLikes] = useState(likes);
-
-    function changeLikes() {
-      if (!likedPost) { // console.log shows opposite of totalLikes compared to rendered need to check that out
-        setLikedPost(true);
-        setTotalLikes(totalLikes + 1);
-      } else {
-        setLikedPost(false);
-        setTotalLikes(totalLikes - 1);
-      }
-    }
 
     return (
       <div className="post-box">
@@ -29,8 +19,8 @@ const UserPost = ({postId, username, header, postText, likes}) => {
               <thead></thead>
               <tbody>
                 <tr>
-                    <th><button onClick={() => changeLikes()}>like {totalLikes}</button></th>
-                    <th><button>comment</button></th>
+                    <th><LikeButton currentLikes={likes}/></th>
+                    <th><Link to={`/posts/${postId}`}><button>comment</button></Link></th>
                 </tr>
               </tbody>
             </table>
