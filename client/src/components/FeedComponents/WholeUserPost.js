@@ -92,12 +92,14 @@ const WholeUserPost = () => {
 
         {/* {console.log(id)}; */}
         <div className="whole-post-comment-box">
+          {/* will post the data from here of the comment in the comment CreateComment component */}
           <textarea className="whole-post-comment-textarea" value={textContent} onChange={e => setTextContent(e.target.value)}></textarea>
           <button onClick={() => createNewComment(textContent)}>Comment</button>
+          {/* if user clicks on the comment button then it should open up the comment div box */}
           {/* remember to figure out why erasing the textarea resets the array of data given (meaning that it resets all user input in, and only leaves fixed data behind) */}
           {/* should be fixed if adding to database properly*/}
           <button onClick={() => eraseNewComment(textContent)}>Erase</button>
-          {/* <p>{saveComment}</p> */}
+          <p>{saveComment}</p>
         </div>
         <div>
           <CommentsDisplay commentsData={commentsData}/>
