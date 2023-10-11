@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import useFetchData from './useFetchData';
 import UserPost from "./UserPost";
 import CommentsDisplay from "./CommentsDisplay";
@@ -8,8 +8,7 @@ const WholeUserPost = () => {
     // const {id} = useParams();
 
     // const {backendData, errorMessage} = useFetchData("/posts/" + id);
-    const [count, setCount] = useState(0);
-    const [saveComment, setComment] = useState("");
+    // const [saveComment, setComment] = useState("");
     const [textContent, setTextContent] = useState("");
 
     const backendData = {
@@ -99,7 +98,7 @@ const WholeUserPost = () => {
           {/* remember to figure out why erasing the textarea resets the array of data given (meaning that it resets all user input in, and only leaves fixed data behind) */}
           {/* should be fixed if adding to database properly*/}
           <button onClick={() => eraseNewComment(textContent)}>Erase</button>
-          <p>{saveComment}</p>
+          {/* <p>{saveComment}</p> */}
         </div>
         <div>
           <CommentsDisplay commentsData={commentsData}/>
