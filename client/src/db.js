@@ -149,6 +149,21 @@ async function makePost(posterId, title, body) {
 	
 }
 
+/*
+*	Returns most recent X posts in an array.
+* Default is unlimited.
+*/
+async function getMostRecentPosts(x = -1) {
+	const query = await forumCollection.orderBy("posted", "desc").get();
+	
+	if (x < 0) {
+		return query.docs;
+	}
+	else {
+		return query.docs.slice(0, x);
+	}
+}
+
 // -------------- TESTING BELOW -----------
 
 var user = "";
@@ -156,7 +171,7 @@ var currentId = "";
 
 var repeat = true;
 while (repeat) {
-	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (e)xit: ");
+	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (e)xit: ");
 	
 	// CHECK ACCOUNT INFO
 	if (userInput == "a") {
@@ -224,6 +239,17 @@ while (repeat) {
 			else {
 				console.log("Something wrong happened (username taken?)");
 			}
+		}
+	}
+	
+	if (userInput == "g") {
+		console.log("Getting 10 most recent forum posts.");
+		const posts = await getMostRecentPosts(10);
+		for (var i = 0; i < posts.length; i ++) {
+			const currentPost = posts[i]._fieldsProto;
+			const currentPostUser = await getUserById(currentPost.poster_id.stringValue);
+			const posterUsername = currentPostUser._fieldsProto.username.stringValue;
+			console.log(currentPost.title.stringValue + " posted by: " + posterUsername + " - " + currentPost.body.stringValue);
 		}
 	}
 	
