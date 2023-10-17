@@ -56,6 +56,32 @@ async function getUserById(id) {
 	}
 }
 
+/*
+*	Returns username with the associated id. If the id is invalid, returns null.
+*/
+async function getUsernameFromId(id) {
+	const out = await getUserById(id);
+	
+	if (out == null) {
+		return null;
+	}
+	else {
+		return out._fieldsProto.username.stringValue;
+	}
+}
+
+// Like getUsernameFromId, but gets the ID based on username.
+async function getIdFromUsername(username) {
+	const out = await getUserByUsername(username);
+	
+	if (out == null) {
+		return null;
+	}
+	else {
+		return out._fieldsProto.id.stringValue;
+	}
+}
+
 // Returns true/false if the username exists in the database.
 async function usernameTaken(username) {
 	const result = (await getUserByUsername(username) != null);
@@ -150,17 +176,62 @@ async function makePost(posterId, title, body) {
 }
 
 /*
-*	Returns most recent X posts in an array.
-* Default is unlimited.
+*	Returns an array consisting of documents from the forum database depending on specifications. Returns null if none can be found.
+* filter: A filter variable to apply. This is the field that the filter will be based on.
+* filterQuery: The value of the filter that must match.
+* orderBy: The name of a field within a post to sort the results by.
+* order: "desc" or "asc" only. Default "desc"
+* x: Default -1, meaning no limit. X is the number of posts at maximum that will be given in the returned array.
 */
-async function getMostRecentPosts(x = -1) {
-	const query = await forumCollection.orderBy("posted", "desc").get();
-	
-	if (x < 0) {
-		return query.docs;
+async function getPostsFilteredSorted(filter, filterQuery, orderBy, order = "desc", x = -1) {
+	var query;
+	if (x >= 0) {
+		query = await forumCollection.where(filter, '==', filterQuery).orderBy(orderBy, order).limit(x).get();
 	}
 	else {
-		return query.docs.slice(0, x);
+		query = await forumCollection.where(filter, '==', filterQuery).orderBy(orderBy, order).get();
+	}
+	if (query.docs.empty) {
+		return null;
+	}
+	else {
+		return query.docs;
+	}
+}
+
+// Same as above just unsorted.
+async function getPostsFiltered(filter, filterQuery, x = -1) {
+	var query;
+	if (x > 0) {
+		query = await forumCollection.where(filter, '==', filterQuery).limit(x).get();
+	}
+	else {
+		query = await forumCollection.where(filter, '==', filterQuery).get();
+	}
+	
+	if (query.docs.empty) {
+		return null;
+	}
+	else {
+		return query.docs;
+	}
+}
+
+// Same again, but unfiltered and only sorted.
+async function getPostsSorted(orderBy, order = "desc", x = -1) {
+	var query;
+	if (x >= 0) {
+		query = await forumCollection.orderBy(orderBy, order).limit(x).get();
+	}
+	else {
+		query = await forumCollection.orderBy(orderBy, order).get();
+	}
+	
+	if (query.docs.empty) {
+		return null;
+	}
+	else {
+		return query.docs;
 	}
 }
 
@@ -243,8 +314,11 @@ while (repeat) {
 	}
 	
 	if (userInput == "g") {
-		console.log("Getting 10 most recent forum posts.");
-		const posts = await getMostRecentPosts(10);
+		var usernameSearch = prompt("Enter username to get posts from: ");
+		usernameSearch = await getIdFromUsername(usernameSearch);
+		
+		const posts = await getPostsFiltered("poster_id", usernameSearch, 10);
+		
 		for (var i = 0; i < posts.length; i ++) {
 			const currentPost = posts[i]._fieldsProto;
 			const currentPostUser = await getUserById(currentPost.poster_id.stringValue);
