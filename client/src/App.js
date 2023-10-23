@@ -6,6 +6,8 @@ import { BrowserRouter as Router, Routes, Route }
 import Feed from './pages/feed';
 import {GoogleLogin } from '@react-oauth/google';
 import Profile from './pages/profile';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 function App() {
 	const responseMessage = (response) => {
@@ -17,13 +19,16 @@ function App() {
 	return (
 		<Router>
 			<div>
-            	<h2>React Google Login</h2>
             	<br />
+            	<br />
+				<br />
             	<br />
             	<GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
         	</div>
 			<Navbar />
 			<Routes>
+				<Route path='/signup' element={<Signup />} />
+				<Route path='/login' element={<Login />} />
 				<Route exact path='/feed' element={<Feed />} />
 				<Route path='/profile' element={<Profile />} />
 			</Routes>
