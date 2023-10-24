@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import FeedPosts from "../components/FeedComponents/FeedPosts";
-import useFetchData from "../components/FeedComponents/useFetchData";
 import CreateUserPost from "../components/FeedComponents/CreateUserPost";
 
 const Feed = () => {
