@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 // import { useParams } from 'react-router-dom';
-import useFetchData from './useFetchData';
+
 import UserPost from "./UserPost";
 import CommentsDisplay from "./CommentsDisplay";
 
