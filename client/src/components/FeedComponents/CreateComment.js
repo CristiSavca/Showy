@@ -1,16 +1,39 @@
+// import { collection, setDoc, getDocs } from "firebase/firestore";
+// import { db } from '../../db';
+
 import { useState } from 'react';
 
+//  add {username, commentTo} back as prop
 const CreateComment = () => {
     const [comment, setComment] = useState("");
+    const [completedComment, setCompletedComment] = useState("");
 
-    function saveCommentContent(comment) {
+    // TODO REPLACE WITH DB FUNCTION for saving comment to user
+    async function saveComment() {
+        // setCompletedComment(comment);
+
+        // if (completedComment !== "") {
+        //     try {
+        //         const docRef = await setDoc(collection(db, "posts"), {
+        //             username: username, 
+        //             commentText: completedComment,
+        //             likes: 0,
+        //             replies: [],
+        //             key: username + "-" + 8, // FIX the key
+        //             commentTo: commentTo
+        //         });
+        //         console.log("Document written with ID: ", docRef.id);
+        //       } catch {
+    
+        //       }
+        // }
     }
 
     return (
-        <div>
-            {/* <textarea className="whole-post-comment-textarea" value={comment} onChange={e => setComment(e.target.value)}></textarea>
-            <button></button> */}
-        </div>
+        <>
+            <textarea className="comment-textarea" value={comment} onChange={e => setComment(e.target.value)} required></textarea>
+            <button onClick={() => {saveComment()}}>comment</button>
+        </>
     )
 }
 

@@ -1,23 +1,34 @@
+// import { doc, getDoc } from "firebase/firestore";
+// import { db } from '../../db';
+
 import { useState, useEffect } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import UserPost from "./UserPost";
 import CommentsDisplay from "./CommentsDisplay";
 
 const WholeUserPost = () => {
-    // const {id} = useParams();
+    const { id } = useParams();
 
-    // const {backendData, errorMessage} = useFetchData("/posts/" + id);
-    // const [saveComment, setComment] = useState("");
-    const [textContent, setTextContent] = useState("");
-
-    const backendData = {
+    const [postData, setPostData] = useState({ // TODO EMPTY THIS LATER
       "key": "Person2-Dogs-are-good-pets", 
       "username": "Person2", 
       "header": "Dogs are good pets", 
       "postText": "Source? me", 
       "likes": 3
-    }
+    });
+
+    const [textContent, setTextContent] = useState(""); // MAKE SURE if the person is signed in they can make comments
+
+    // async function getPostData() {
+    //   const userPostDocRef = doc(db, "posts", id);
+    //   const userPostDoc = await getDoc(userPostDocRef);
+    //   setPostData(userPostDoc.data());
+    // }
+
+    // useEffect(() => {
+    //   getPostData();
+    // }, [postData]);
 
     const commentsData = [
       {
@@ -60,49 +71,30 @@ const WholeUserPost = () => {
       }
     ]
   
-
-
     function createNewComment(textContent) {
-      commentsData.push({
-        "username": backendData.username,
-        "commentText": textContent,
-        "likes": 0,
-        "replies": []
-      })
+
     }
 
-
-    // useEffect(() => {
-    // }, [commentsData]);
-
-    function eraseNewComment(textContent) {
-      setTextContent("");
-    }
-
-  
     return (
       <div className="whole-post-box">
-        <UserPost key={backendData.key}
-                    username={backendData.username} 
-                        header={backendData.header} 
-                            postText={backendData.postText} 
-                                likes={backendData.likes} 
-                                    postId={backendData.key}/>
+        {(typeof postData === "undefined") ? (<p>Loading...</p>) : 
+                <UserPost key={postData.key}
+                    username={postData.username} 
+                        header={postData.header} 
+                            postText={postData.postText} 
+                                likes={postData.likes} 
+                                    postId={postData.key} />
+        }
 
-        {/* {console.log(id)}; */}
         <div className="whole-post-comment-box">
-          {/* will post the data from here of the comment in the comment CreateComment component */}
+          {/*  TODO change below to CreateComment component*/}
           <textarea className="whole-post-comment-textarea" value={textContent} onChange={e => setTextContent(e.target.value)}></textarea>
           <button onClick={() => createNewComment(textContent)}>Comment</button>
-          {/* if user clicks on the comment button then it should open up the comment div box */}
-          {/* remember to figure out why erasing the textarea resets the array of data given (meaning that it resets all user input in, and only leaves fixed data behind) */}
-          {/* should be fixed if adding to database properly*/}
-          <button onClick={() => eraseNewComment(textContent)}>Erase</button>
-          {/* <p>{saveComment}</p> */}
+          {/* TODO if user clicks on the comment button then it should open up the comment div box */}
         </div>
-        <div>
-          <CommentsDisplay commentsData={commentsData}/>
-        </div>
+        <>
+          <CommentsDisplay commentsData={commentsData}/> {/* TODO NEED TO CHANGE TO postData.replies */}
+        </>
       </div>
     )
   }

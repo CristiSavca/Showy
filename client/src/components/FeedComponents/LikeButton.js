@@ -1,6 +1,9 @@
+// import { collection, addDoc, getDocs } from "firebase/firestore";
+// import { db } from '../../db';
+
 import { useState } from 'react';
 
-const LikeButton = ({currentLikes}) => { // props should be the amount of likes for the post / comment and if it was liked before
+const LikeButton = ({currentLikes}) => { // props should be the amount of likes for the post / comment and if it was liked before // also need id of comment or post
     const [likedObject, setLikedObject] = useState(false); // todo use props for liked object
     const [totalLikes, setLike] = useState(currentLikes); // todo use props for likes
 
