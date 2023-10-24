@@ -1,13 +1,27 @@
+// import { collection, getDocs } from "firebase/firestore";
+// import { db } from '../db';
+
 import React from "react";
 import { Link } from 'react-router-dom';
 
 import FeedPosts from "../components/FeedComponents/FeedPosts";
-import CreateUserPost from "../components/FeedComponents/CreateUserPost";
 
 const Feed = () => {
-    //const {backendData, errorMessage} = useFetchData("/posts");
+    // const [postsData, setPostsData] = useState([]);
 
-    const backendData = {
+    async function getPostsData() {
+        // await getDocs(collection(db, "posts"))
+        //     .then((querySnapshot)=>{               
+        //         const collectedPosts = querySnapshot.docs.map((doc) => ({...doc.data(), id:doc.id }));
+        //         setPostsData(collectedPosts);       
+        //     })
+    }
+
+    // useEffect(() => {
+    //     getPostsData();
+    // }, [postsData]);
+
+    const postsData = { // REMOVE THIS WHEN DATABASE FUNCTIONS ARE CONNECTED
         "posts": [
             {
                 "key": "Person-What-is-the-future?",
@@ -41,7 +55,7 @@ const Feed = () => {
             <Link to={`/posts/create-post`}>
                 <button>Create post</button>
             </Link>
-            <FeedPosts backendData={backendData} />
+            <FeedPosts postsData={postsData.posts} />
         </div>
     );
 };
