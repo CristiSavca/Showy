@@ -1,17 +1,37 @@
+import { useState } from 'react';
+
+import CreateComment from './CreateComment';
+import LikeButton from './LikeButton';
 import CommentsDisplay from "./CommentsDisplay";
 
 const Comment = ({username, commentText, likes, commentId, replies}) => {
+    const [clickedReply, setClickedReply] = useState(false);
+
+    // Display editable comment box or reply button
+    let replyContent;
+
+    if (!clickedReply) {
+        replyContent = <button onClick={() => {setClickedReply(true)}}>reply</button>
+    } else {
+        replyContent = <>
+            <CreateComment />
+            <button onClick={() => {setClickedReply(false)}}>cancel</button>
+        </>
+    }
+    
     return (
         <div className="comment">
-            <p>{commentId}</p>
-            <p>{username}</p>
-            <p>{commentText}</p>
-            <p>{likes}</p>
-            <button>reply</button> {/* need a link to the reply as a post and then comment from there
-                OR create a comment box div under the chosen comment and delete that when finished commenting*/}
-            <div>
+            <>
+                <p>{username}</p>
+                <p>{commentText}</p>
+                <LikeButton currentLikes={likes} /> { /* TODO add id prop to like button */}
+            </>
+            <>
+                {replyContent}
+            </>
+            <>
                 <CommentsDisplay commentsData={replies}/>
-            </div>
+            </>
         </div>
     )
 }
