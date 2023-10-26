@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import UserPost from "./UserPost";
 import CommentsDisplay from "./CommentsDisplay";
+import CreateComment from './CreateComment';
 
 const WholeUserPost = () => {
     const { id } = useParams();
@@ -70,10 +71,6 @@ const WholeUserPost = () => {
         "replies": []
       }
     ]
-  
-    function createNewComment(textContent) {
-
-    }
 
     return (
       <div className="whole-post-box">
@@ -87,10 +84,7 @@ const WholeUserPost = () => {
         }
 
         <div className="whole-post-comment-box">
-          {/*  TODO change below to CreateComment component*/}
-          <textarea className="whole-post-comment-textarea" value={textContent} onChange={e => setTextContent(e.target.value)}></textarea>
-          <button onClick={() => createNewComment(textContent)}>Comment</button>
-          {/* TODO if user clicks on the comment button then it should open up the comment div box */}
+          <CreateComment /> {/* where the username is put in as a prop and id of the post */}
         </div>
         <>
           <CommentsDisplay commentsData={commentsData}/> {/* TODO NEED TO CHANGE TO postData.replies */}
