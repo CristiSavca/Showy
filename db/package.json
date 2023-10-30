@@ -1,0 +1,12 @@
+{
+  "name": "db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "firebase": "^10.4.0",
+    "firebase-admin": "^11.11.0",
+    "prompt-sync": "^4.2.0",
+    "requirejs": "^2.3.6"
+  }
+}
