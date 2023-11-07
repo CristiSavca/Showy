@@ -5,36 +5,18 @@
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-
-
 const prompt = require('prompt-sync')();
 
-import Database from "./db.js"
+import Database from "./db.js";
 
-// REQUIRES .env
-require('dotenv').config();
-var firebaseCreds = {
-  "type": "service_account",
-  "project_id": "showy-92cc7",
-  "private_key_id": process.env.private_key_id,
-  "private_key": process.env.private_key,
-  "client_email": process.env.client_email,
-  "client_id": process.env.client_id,
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-g3h0s%40showy-92cc7.iam.gserviceaccount.com",
-  "universe_domain": "googleapis.com"
-};
-
-const dbURL = "https://showy-92cc7-default-rtdb.firebaseio.com/";
+import { firebaseKey, firebaseURL } from "./firebase-key.js";
 
 // -------------- TESTING BELOW -----------
 
 var user = "";
 var currentId = "";
 
-const dbTest = new Database(firebaseCreds, dbURL);
+const dbTest = new Database(firebaseKey, firebaseURL);
 
 var repeat = true;
 while (repeat) {
@@ -68,6 +50,7 @@ while (repeat) {
 				
 				await dbTest.addUserToDatabase(user, email, display);
 				const currentUser = await dbTest.getUserByUsername(user);
+				
 				currentId = currentUser._fieldsProto.id.stringValue;
 			}
 		}
