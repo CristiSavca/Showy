@@ -5,19 +5,18 @@
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-import Database from "./db.js"
-
 const prompt = require('prompt-sync')();
 
-const svcAccount = require("D:/Downloads/showy-92cc7-firebase-adminsdk-g3h0s-dc80e19b7c.json");
-const dbURL = "https://showy-92cc7-default-rtdb.firebaseio.com/";
+import Database from "./db.js";
+
+import { firebaseKey, firebaseURL } from "./firebase-key.js";
 
 // -------------- TESTING BELOW -----------
 
 var user = "";
 var currentId = "";
 
-const dbTest = new Database(svcAccount, dbURL);
+const dbTest = new Database(firebaseKey, firebaseURL);
 
 var repeat = true;
 while (repeat) {
@@ -51,6 +50,7 @@ while (repeat) {
 				
 				await dbTest.addUserToDatabase(user, email, display);
 				const currentUser = await dbTest.getUserByUsername(user);
+				
 				currentId = currentUser._fieldsProto.id.stringValue;
 			}
 		}
