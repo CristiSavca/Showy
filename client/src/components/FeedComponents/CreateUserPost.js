@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 
-const CreateUserPost = ({username}) => {
+const CreateUserPost = ({currentUser}) => {
     const [header, setHeader] = useState("");
     const [userText, setUserText] = useState("");
     const [datas, setDatas] = useState([]);
@@ -35,7 +35,8 @@ const CreateUserPost = ({username}) => {
     
     return (
         <div className="post-box">
-            <p>{username}</p>
+            {console.log(currentUser)}
+            <p>{currentUser.displayName}username</p>
             <label>Header:</label> 
             <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} required />
             <div className="post-content">

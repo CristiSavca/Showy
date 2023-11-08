@@ -9,6 +9,9 @@ import CreateUserPost from './components/FeedComponents/CreateUserPost';
 import { GoogleLogin } from '@react-oauth/google';
 import { signup, login, logout, useAuth } from "./firebase";
 
+//import Database from '../../db/db';
+//import { firebaseKey, firebaseURL } from '../../db/firebase-key';
+
 function App() {
     // State and ref from the second block
     const [loading, setLoading] = useState(false);
@@ -19,6 +22,8 @@ function App() {
     // Handlers from the second block
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
+
+    //const dataBase = new Database(firebaseKey, firebaseURL);
 
     async function handleSignup() {
         setLoading(true);
