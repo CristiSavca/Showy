@@ -1,18 +1,21 @@
-import React, { useRef, useState } from 'react';
-import './App.css';
-import Navbar from './components/Navbar';
+import React, { useEffect, useRef, useState } from 'react';
+import Axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { GoogleLogin } from '@react-oauth/google';
+import { signup, login, logout, useAuth } from "./firebase";
+
+import './App.css';
+
+import Navbar from './components/Navbar';
 import Feed from './pages/feed';
 import Profile from './pages/profile';
 import WholeUserPost from './components/FeedComponents/WholeUserPost';
 import CreateUserPost from './components/FeedComponents/CreateUserPost';
-import { GoogleLogin } from '@react-oauth/google';
-import { signup, login, logout, useAuth } from "./firebase";
-
-//import Database from '../../db/db';
-//import { firebaseKey, firebaseURL } from '../../db/firebase-key';
 
 function App() {
+    const [test, setTest] = useState(null);
+    const [test2, setTest2] = useState(null);
     // State and ref from the second block
     const [loading, setLoading] = useState(false);
     const currentUser = useAuth();
@@ -23,7 +26,29 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
-    //const dataBase = new Database(firebaseKey, firebaseURL);
+
+
+    async function getTest() {
+        const response = await Axios.get("http://localhost:5000/getUsername");
+        setTest(response.data);
+        
+    }
+
+    async function getTest2() {
+        Axios.get("http://localhost:5000/sendSomething", {
+            params: {
+                testing: "sent something"
+            }
+        }).then((response) => {
+            setTest2(response.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    useEffect(() => {
+        getTest2();
+    }, []);
 
     async function handleSignup() {
         setLoading(true);
@@ -78,6 +103,10 @@ function App() {
                 <br />
                 <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
             </div>
+
+            <>
+                    <p>{console.log(test2)}</p>
+            </>
 
             {/* From the first block */}
             <Navbar />
