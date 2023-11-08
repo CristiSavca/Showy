@@ -3,8 +3,6 @@
 *	CSCI 499 Capstone Project
 */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
 import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 import { getFirestore, Timestamp, FieldValue, Filter } from 'firebase-admin/firestore';
 import admin from "firebase-admin";
