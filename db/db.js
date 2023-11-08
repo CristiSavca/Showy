@@ -9,11 +9,6 @@ import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 import { getFirestore, Timestamp, FieldValue, Filter } from 'firebase-admin/firestore';
 import admin from "firebase-admin";
 
-const prompt = require('prompt-sync')();
-
-const svcAccount = require("D:/Downloads/showy-92cc7-firebase-adminsdk-g3h0s-dc80e19b7c.json");
-const dbURL = "https://showy-92cc7-default-rtdb.firebaseio.com/";
-
 class Database {
 	
 	constructor(serviceAccount, databaseURL) {
