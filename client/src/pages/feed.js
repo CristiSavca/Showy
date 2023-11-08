@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 import FeedPosts from "../components/FeedComponents/FeedPosts";
 
-const Feed = () => {
+const Feed = ({currentUser}) => {
     // const [postsData, setPostsData] = useState([]);
 
     async function getPostsData() {
@@ -50,11 +50,11 @@ const Feed = () => {
     return (
         <div>
             <h1>
-                Posts & stuff...
+                Welcome to the feed!
             </h1>
-            <Link to={`/posts/create-post`}>
+            {currentUser && <Link to={`/posts/create-post`}>
                 <button>Create post</button>
-            </Link>
+            </Link>}
             <FeedPosts postsData={postsData.posts} />
         </div>
     );
