@@ -3,15 +3,11 @@ import cors from 'cors';
 
 import Database from './db.js';
 import { firebaseKey, firebaseURL } from './firebase-key.js';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 const app = express();
 app.use(cors());
-app.use(express.json());
 
 const oneDatabase = new Database(firebaseKey, firebaseURL);
-
-
 
 
 // works
@@ -40,12 +36,6 @@ app.get("/getUsername", (req, res) => {
     console.log("test1", userFromUsername);
 
 });
-
-// app.get("/getUsername", (req, res) => {
-//     res.send(test);
-//     console.log("test", test);
-
-// });
 
 app.get("/sendSomething", (req, res) => {
     res.send(req.query.testing);
