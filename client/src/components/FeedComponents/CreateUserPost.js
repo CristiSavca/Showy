@@ -14,8 +14,22 @@ const CreateUserPost = ({currentUsername}) => {
     const [createdPost, setCreatedPost] = useState(false);
 
     useEffect(() => {
-        setUsername(currentUsername);
-    }, []);
+        //setUsername(currentUsername);
+        getUsername();
+    }, [currentUsername]);
+
+    async function getUsername() {
+        await Axios.get("http://localhost:5000/getUsername", {
+            params: {
+                uid: currentUsername.uid
+            }
+        }).then((response) => {
+            setUsername(response.data);
+            console.log("hello",response.data);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
     function checkPost() {
         if (header === "" || body === "") {
