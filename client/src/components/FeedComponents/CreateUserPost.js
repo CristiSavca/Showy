@@ -14,22 +14,23 @@ const CreateUserPost = ({currentUsername}) => {
     const [createdPost, setCreatedPost] = useState(false);
 
     useEffect(() => {
-        //setUsername(currentUsername);
+        async function getUsername() {
+            await Axios.get("http://localhost:5000/getUsername", {
+                params: {
+                    uid: currentUsername.uid
+                }
+            }).then((response) => {
+                setUsername(response.data);
+                console.log("hello",response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
         getUsername();
     }, [currentUsername]);
 
-    async function getUsername() {
-        await Axios.get("http://localhost:5000/getUsername", {
-            params: {
-                uid: currentUsername.uid
-            }
-        }).then((response) => {
-            setUsername(response.data);
-            console.log("hello",response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
+
 
     function checkPost() {
         if (header === "" || body === "") {
@@ -40,14 +41,14 @@ const CreateUserPost = ({currentUsername}) => {
     }
     
     async function createPost() {
-
-        await Axios.post('/createPost', {
+        await Axios.post('http://localhost:5000/createPost', {
             username: username,
             header: header,
             body: body,
         })
         .then((response) => {
             setCreatedPost(response);
+            console.log(response.status);
         }).catch((error) => {
                 console.log(error);
         });
@@ -67,7 +68,7 @@ const CreateUserPost = ({currentUsername}) => {
 
     return (
         <div className="post-box">
-            {<p>Posted: {createdPost}</p>}
+            {/* { console.log(createdPost)} */}
             {username && <p>{username}</p>}
             <label>Header:</label> 
             <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} required />
