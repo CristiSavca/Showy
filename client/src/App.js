@@ -14,8 +14,8 @@ import WholeUserPost from './components/FeedComponents/WholeUserPost';
 import CreateUserPost from './components/FeedComponents/CreateUserPost';
 
 function App() {
-    const [test, setTest] = useState(null);
-    const [test2, setTest2] = useState(null);
+
+
     // State and ref from the second block
     const [loading, setLoading] = useState(false);
     const currentUser = useAuth();
@@ -25,30 +25,6 @@ function App() {
     // Handlers from the second block
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
-
-
-
-    async function getTest() {
-        const response = await Axios.get("http://localhost:5000/getUsername");
-        setTest(response.data);
-        
-    }
-
-    // async function getTest2() {
-    //     Axios.get("http://localhost:5000/sendSomething", {
-    //         params: {
-    //             testing: "sent something"
-    //         }
-    //     }).then((response) => {
-    //         setTest2(response.data);
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // }
-
-    useEffect(() => {
-        getTest();
-    }, []);
 
     async function handleSignup() {
         setLoading(true);
@@ -104,17 +80,13 @@ function App() {
                 <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
             </div>
 
-            <>
-                    {test && console.log(test)}
-            </>
-
             {/* From the first block */}
             <Navbar />
             <Routes>
                 <Route exact path='/feed' element={<Feed currentUser={currentUser} />} />
                 <Route path='/profile' element={currentUser ? <Profile /> : <div>Please sign in to view your profile.</div>} />
                 <Route path='/posts/:id' element={<WholeUserPost />} />
-                <Route path='/posts/create-post' element={<CreateUserPost currentUser={currentUser} />} />
+                <Route path='/posts/create-post' element={<CreateUserPost currentUsername={currentUser} />} />
             </Routes>
         </Router>
     );
