@@ -36,9 +36,12 @@ const oneDatabase = new Database(firebaseKey, firebaseURL);
 // not working
 
 // not able to read _fieldsProto // did work pre-merge using db-test.js
-// let test6 = await oneDatabase.addUserToDatabase("tester6", "tester6@email.com", "tester6");
+//let test6 = await oneDatabase.addUserToDatabase("tester6", "tester6@email.com", "tester6");
 
 
+// async function testadd() {
+//     return await oneDatabase.addUserToDatabase("test6", "tester777@email.com", "testnum6");
+// }
 
 
 
@@ -53,7 +56,7 @@ const oneDatabase = new Database(firebaseKey, firebaseURL);
 // testing
 
 async function test18() {
-    let testing = await oneDatabase.getIdFromUsername("newuser12345");
+    //let testing = await oneDatabase.getIdFromUsername("newuser12345");
     //let posts = await oneDatabase.getPostsFiltered("poster_id",testing, 10);
     // const posts = await oneDatabase.getPostsFiltered("username", "newuser12345", 10);
 
@@ -65,7 +68,7 @@ async function test18() {
    // get by certain query
    //const posts = await oneDatabase.getPostsSorted("poster_id", "desc", 10);
 
-    const postslist = posts;
+    //const postslist = posts;
 
     // for (var i = 0; i < posts.length; i ++) {
     //     const currentPost = posts[i]._fieldsProto;
@@ -80,16 +83,17 @@ async function test18() {
     //     postslist.push(post);
     // }
 
-    return postslist;
+    //return postslist;
 }
 
 
 
 app.get("/getUsername", async (req, res) => {  
     //let testuser = "hello";
-    const posts = await test18();
-    res.send(posts);
-    console.log(posts);
+    //const posts = await test18();
+    // let check = await testadd();
+    // res.send(check);
+    // console.log("printok",check);
 });
 
 // app.get("/sendSomething", (req, res) => {
