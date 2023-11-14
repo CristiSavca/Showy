@@ -87,7 +87,6 @@ async function test18() {
 }
 
 
-
 app.get("/getUsername", async (req, res) => { 
     let userID = req.query.uid;
     let username = await oneDatabase.getUsernameFromId(userID);
@@ -100,12 +99,6 @@ app.post("/createPost", async (req, res) => {
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
     res.send(posted);
 });
-
-// app.get("/sendSomething", (req, res) => {
-//     res.send(req.query.testing);
-//     console.log(req.query.testing);
-// });
-
 
 
 app.listen(5000, () => {console.log("app running")});
