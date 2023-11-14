@@ -6,6 +6,7 @@ import { firebaseKey, firebaseURL } from './firebase-key.js';
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const oneDatabase = new Database(firebaseKey, firebaseURL);
 
@@ -95,7 +96,7 @@ app.get("/getUsername", async (req, res) => {
 });
 
 app.post("/createPost", async (req, res) => {
-    let post = req.query;
+    let post = req.body;
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
     res.send(posted);
 });
