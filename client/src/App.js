@@ -34,20 +34,20 @@ function App() {
         
     }
 
-    async function getTest2() {
-        Axios.get("http://localhost:5000/sendSomething", {
-            params: {
-                testing: "sent something"
-            }
-        }).then((response) => {
-            setTest2(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
+    // async function getTest2() {
+    //     Axios.get("http://localhost:5000/sendSomething", {
+    //         params: {
+    //             testing: "sent something"
+    //         }
+    //     }).then((response) => {
+    //         setTest2(response.data);
+    //     }).catch((error) => {
+    //         console.log(error);
+    //     });
+    // }
 
     useEffect(() => {
-        getTest2();
+        getTest();
     }, []);
 
     async function handleSignup() {
@@ -105,7 +105,7 @@ function App() {
             </div>
 
             <>
-                    <p>{console.log(test2)}</p>
+                    {test && console.log(test)}
             </>
 
             {/* From the first block */}
