@@ -95,6 +95,30 @@ app.get("/getUsername", async (req, res) => {
     res.send(username);
 });
 
+app.get("/getPosts", async (req, res) => {
+    const posts = await oneDatabase.getPostsSorted("poster_id", "desc", -1);
+    const postsList = [];
+    //console.log(posts[0]);
+
+    for (let i = 0; i < posts.length; i++) {
+        const currentPost = posts[i]._fieldsProto;
+        const currentPostUser = await oneDatabase.getUserById(currentPost.poster_id.stringValue);
+        //const posterUsername = currentPostUser._fieldsProto.username.stringValue;
+        //console.log(currentPost.title.stringValue + " posted by:" + currentPost.poster_id.stringValue + " - " + currentPost.body.stringValue);
+        let post = {
+                    postId:currentPost.id.stringValue,
+                    username: currentPost.poster_id.stringValue,
+                    header: currentPost.title.stringValue,
+                    body: currentPost.body.stringValue,
+                    likes: currentPost.likes.integerValue
+        };
+        postsList.push(post);
+    }
+    
+    //console.log(postsList);
+    res.send(postsList);
+});
+
 app.post("/createPost", async (req, res) => {
     let post = req.body;
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
