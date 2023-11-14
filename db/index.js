@@ -88,12 +88,17 @@ async function test18() {
 
 
 
-app.get("/getUsername", async (req, res) => {  
-    //let testuser = "hello";
-    //const posts = await test18();
-    // let check = await testadd();
-    // res.send(check);
-    // console.log("printok",check);
+app.get("/getUsername", async (req, res) => { 
+    let userID = req.query.uid;
+    let username = await oneDatabase.getUsernameFromId(userID);
+    console.log(username);
+    res.send(username);
+});
+
+app.post("/createPost", async (req, res) => {
+    let post = req.query;
+    let posted = await oneDatabase.makePost(post.username, post.header, post.body);
+    res.send(posted);
 });
 
 // app.get("/sendSomething", (req, res) => {
