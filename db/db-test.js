@@ -3,10 +3,8 @@
 *	CSCI 499 Capstone Project
 */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const prompt = require('prompt-sync')();
-
+import promptSync from 'prompt-sync';
+const prompt = promptSync();
 import Database from "./db.js";
 
 import { firebaseKey, firebaseURL } from "./firebase-key.js";
