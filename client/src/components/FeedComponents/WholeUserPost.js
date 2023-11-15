@@ -13,7 +13,6 @@ const WholeUserPost = () => {
     const [postData, setPostData] = useState({});
     const [textContent, setTextContent] = useState("");
 
-
     useEffect(() => {
       async function getPostData() {
         await Axios.get("http://localhost:5000/getPost", {

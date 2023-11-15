@@ -1,5 +1,3 @@
-// import { collection, addDoc, getDocs } from "firebase/firestore";
-// import { db } from '../../db';
 
 import { useState } from 'react';
 
