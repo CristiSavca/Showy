@@ -11,10 +11,15 @@ const Feed = ({currentUser}) => {
 
     useEffect(() => {
         async function getPostsData() {
-            setPostsData(await Axios.get("http://localhost:5000/getPosts"));
-            console.log(postsData);
+            await Axios.get("http://localhost:5000/getPosts")
+            .then((response) => {
+                setPostsData(response.data);
+                console.log(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
-
+        
         getPostsData();
     }, []);
 
@@ -26,7 +31,7 @@ const Feed = ({currentUser}) => {
             {currentUser && <Link to={`/posts/create-post`}>
                 <button>Create post</button>
             </Link>}
-            <FeedPosts postsData={postsData} />
+            {postsData && <FeedPosts postsData={postsData} />}
         </div>
     );
 };

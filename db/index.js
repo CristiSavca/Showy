@@ -106,7 +106,7 @@ app.get("/getPosts", async (req, res) => {
         //const posterUsername = currentPostUser._fieldsProto.username.stringValue;
         //console.log(currentPost.title.stringValue + " posted by:" + currentPost.poster_id.stringValue + " - " + currentPost.body.stringValue);
         let post = {
-                    postId:currentPost.id.stringValue,
+                    postId: currentPost.id.stringValue,
                     username: currentPost.poster_id.stringValue,
                     header: currentPost.title.stringValue,
                     body: currentPost.body.stringValue,
@@ -114,8 +114,9 @@ app.get("/getPosts", async (req, res) => {
         };
         postsList.push(post);
     }
-    
-    //console.log(postsList);
+
+
+    console.log(postsList);
     res.send(postsList);
 });
 
