@@ -45,17 +45,6 @@ const oneDatabase = new Database(firebaseKey, firebaseURL);
 // }
 
 
-
-
-// app.get("/getUsername", (req, res) => {
-//     res.send(userFromUsername);
-//     console.log("test1", userFromUsername);
-
-// });
-
-
-// testing
-
 async function test18() {
     //let testing = await oneDatabase.getIdFromUsername("newuser12345");
     //let posts = await oneDatabase.getPostsFiltered("poster_id",testing, 10);
@@ -91,8 +80,24 @@ async function test18() {
 app.get("/getUsername", async (req, res) => { 
     let userID = req.query.uid;
     let username = await oneDatabase.getUsernameFromId(userID);
-    console.log(username);
+    //console.log(username);
     res.send(username);
+});
+
+app.get("/getPost", async (req, res) => {
+    let postID = req.query.postId;
+    const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
+    const currentPost = onePost[0]._fieldsProto;
+    let post = {
+        postId: currentPost.id.stringValue,
+        username: currentPost.poster_id.stringValue,
+        header: currentPost.title.stringValue,
+        body: currentPost.body.stringValue,
+        likes: currentPost.likes.integerValue
+    };
+
+    //console.log(post);
+    res.send(post);
 });
 
 app.get("/getPosts", async (req, res) => {
@@ -106,17 +111,16 @@ app.get("/getPosts", async (req, res) => {
         //const posterUsername = currentPostUser._fieldsProto.username.stringValue;
         //console.log(currentPost.title.stringValue + " posted by:" + currentPost.poster_id.stringValue + " - " + currentPost.body.stringValue);
         let post = {
-                    postId: currentPost.id.stringValue,
-                    username: currentPost.poster_id.stringValue,
-                    header: currentPost.title.stringValue,
-                    body: currentPost.body.stringValue,
-                    likes: currentPost.likes.integerValue
+            postId: currentPost.id.stringValue,
+            username: currentPost.poster_id.stringValue,
+            header: currentPost.title.stringValue,
+            body: currentPost.body.stringValue,
+            likes: currentPost.likes.integerValue
         };
         postsList.push(post);
     }
 
-
-    console.log(postsList);
+    //console.log(postsList);
     res.send(postsList);
 });
 
