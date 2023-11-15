@@ -169,7 +169,8 @@ class Database {
 			body: body,
 			likes: 0,
 			poster_id: posterId,
-			posted: timestamp
+			posted: timestamp,
+			liked: []
 		}
 		
 		const res = await this.forumCollection.add(post);
@@ -240,6 +241,68 @@ class Database {
 			return query.docs;
 		}
 	}
+	
+	async getPostById(postId) {
+		const post = await this.forumCollection.doc(postId).get();
+		return post;
+	}
+	
+	
+	async getLikeCounter(postId) {
+		const post = await this.getPostById(postId);
+		return post._fieldsProto.likes.integerValue;
+	}
+	
+	async getLikes(postId) {
+		const post = await this.getPostById(postId);
+		return post._fieldsProto.liked.arrayValue.values;
+	}
+	
+	async getUserLikedPosts(userId) {
+		
+	}
+	
+	async userLiked(postId, userId) {
+		var res = await this.forumCollection.where('liked', 'array-contains', userId);
+		res = await res.where('id', '==', postId).get();
+		return !res.empty;
+	}
+	
+	async incrementLikes(postId, userId) {
+		
+		const liked = await this.userLiked(postId, userId);
+		if (liked) {
+			return false;
+		}
+		const post = await this.getPostById(postId);
+		
+		var new_likes = await this.getLikeCounter(postId);
+		new_likes ++;
+		
+		const overwrite = await this.forumCollection.doc(postId);
+		await overwrite.update({liked: FieldValue.arrayUnion(userId), likes: new_likes});
+		
+		return true;
+	}
+	
+	async decrementLikes(postId, userId) {
+		
+		const liked = await this.userLiked(postId, userId);
+		if (!liked) {
+			return false;
+		}
+		const post = await this.getPostById(postId);
+		
+		var new_likes = await this.getLikeCounter(postId);
+		new_likes --;
+		
+		const overwrite = await this.forumCollection.doc(postId);
+		await overwrite.update({liked: FieldValue.arrayRemove(userId), likes: new_likes});
+		
+		return true;
+	}
+	
+
 }
 
 

@@ -18,7 +18,7 @@ const dbTest = new Database(firebaseKey, firebaseURL);
 
 var repeat = true;
 while (repeat) {
-	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (e)xit, (aa)dd user from authenticator: ");
+	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (aa)dd user from authenticator, (ch)eck post, (lp)ike post, (e)xit: ");
 	
 	// CHECK ACCOUNT INFO
 	if (userInput == "a") {
@@ -101,6 +101,56 @@ while (repeat) {
 			const currentPostUser = await dbTest.getUserById(currentPost.poster_id.stringValue);
 			const posterUsername = currentPostUser._fieldsProto.username.stringValue;
 			console.log(currentPost.title.stringValue + " posted by: " + posterUsername + " - " + currentPost.body.stringValue);
+		}
+	}
+	
+	if (userInput == "ch") {
+		const postId = prompt("Enter Post ID: ");
+		const post = await dbTest.getPostById(postId);
+		const post_username = await dbTest.getUsernameFromId(post._fieldsProto.poster_id.stringValue);
+		
+		const likes = await dbTest.getLikeCounter(postId);
+		const likedList = await dbTest.getLikes(postId);
+		
+		console.log(post._fieldsProto.title.stringValue + " posted by " + post_username);
+		console.log("Likes: " + likes + ", by " + likedList);
+	}
+	
+	if (userInput == "lp") {
+		if (user == "" || currentId == "") {
+			console.log("Not logged in!");
+		}
+		else {
+			
+			const postId = prompt("Enter post ID: ");
+			
+			
+			const res = await dbTest.incrementLikes(postId, currentId);
+			
+			if (res) {
+				console.log("Liked the post successfully.");
+			}
+			else {
+				console.log("Could not like the post successfully.");
+			}
+		}
+	}
+	
+	if (userInput == "up") {
+		if (user == "" || currentId == "") {
+			console.log("Not logged in!");
+		}
+		else {
+			
+			const postId = prompt("Enter post ID: ");
+			const res = await dbTest.decrementLikes(postId, currentId);
+			
+			if (res) {
+				console.log("Unliked the post successfully.");
+			}
+			else {
+				console.log("Could not unlike the post successfully.");
+			}
 		}
 	}
 	
