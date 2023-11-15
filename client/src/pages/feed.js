@@ -1,5 +1,3 @@
-// import { collection, getDocs } from "firebase/firestore";
-// import { db } from '../db';
 import Axios from 'axios';
 import {useState, useEffect} from "react";
 import { Link } from 'react-router-dom';

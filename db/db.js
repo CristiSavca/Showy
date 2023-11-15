@@ -91,7 +91,7 @@ class Database {
 	*/
 	async addUserToDatabase(username, email, display) {
 		
-		if (this.usernameTaken(username) || !this.allowableUsername(username)) {
+		if (await this.usernameTaken(username) || !this.allowableUsername(username)) {
 			return false;
 		}
 		
@@ -102,7 +102,7 @@ class Database {
 		}
 		
 		const res = await this.usersCollection.add(data);
-		const newUser = this.usersCollection.doc(res.id);
+		const newUser = await this.usersCollection.doc(res.id);
 		const amendment = await newUser.update({id: res.id});
 		// TODO CONSOLE OUTPUT: REMOVE LATER
 		console.log('Added ', username, ' with email ', email, ' and display name ', display, ' to database. ID:', res.id);
