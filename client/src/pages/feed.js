@@ -26,10 +26,8 @@ const Feed = ({currentUser}) => {
             <h1>
                 Welcome to the feed!
             </h1>
-            {currentUser && <Link to={`/posts/create-post`}>
-                <button>Create post</button>
-            </Link>}
-            {postsData && <FeedPosts postsData={postsData} />}
+            {currentUser && <Link to={`/posts/create-post`}><button>Create post</button></Link>}
+            {postsData && <FeedPosts currentUser={currentUser} postsData={postsData} />}
         </div>
     );
 };
