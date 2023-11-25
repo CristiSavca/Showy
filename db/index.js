@@ -84,6 +84,12 @@ app.get("/getUsername", async (req, res) => {
     res.send(username);
 });
 
+app.get("/getLikesCounter", async (req, res) => {
+    let postID = req.query.postId;
+    const postLikesNumber = await oneDatabase.getLikesCounter(postID);
+    res.send(postLikesNumber);
+});
+
 app.get("/getPost", async (req, res) => {
     let postID = req.query.postId;
     const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
@@ -124,6 +130,27 @@ app.get("/getPosts", async (req, res) => {
     res.send(postsList);
 });
 
+app.patch("/addLike", async (req, res) => {
+    // let userID = req.query.uid;
+    // let username = await oneDatabase.getUsernameFromId(userID);
+    // Get username
+    // get post id
+    // add like
+
+    // let post = req.body;
+    // let postID = post.postId;
+    // let user = 
+    // let addLike = await oneDatabase.incrementLikes(postId, userId);
+    
+});
+
+app.patch("removeLike", async (req, res) => {
+    
+    // get username
+    // get post id
+    // remove the like
+});
+
 app.post("/createPost", async (req, res) => {
     let post = req.body;
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
@@ -131,4 +158,4 @@ app.post("/createPost", async (req, res) => {
 });
 
 
-app.listen(5000, () => {console.log("app running")});
+app.listen(5000, () => {console.log("app is running")});
