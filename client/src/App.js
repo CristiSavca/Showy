@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { GoogleLogin } from '@react-oauth/google';
 import { signup, login, logout, useAuth } from "./firebase";
+
+import { useDispatch } from 'react-redux';
+import { saveUsername } from './redux/slices/saveUsernameSlice';
 
 import './App.css';
 
@@ -14,8 +16,6 @@ import WholeUserPost from './components/FeedComponents/WholeUserPost';
 import CreateUserPost from './components/FeedComponents/CreateUserPost';
 
 function App() {
-
-
     // State and ref from the second block
     const [loading, setLoading] = useState(false);
     const currentUser = useAuth();
@@ -25,6 +25,9 @@ function App() {
     // Handlers from the second block
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
+
+    //const getUsername = useSelector((state) => state.saveUsername.username);
+    const dispatch = useDispatch();
 
     async function handleSignup() {
         setLoading(true);
@@ -50,10 +53,15 @@ function App() {
         setLoading(true);
         try {
             await logout();
+            dispatch(saveUsername(""));
         } catch {
             alert("Error!");
         }
         setLoading(false);
+    }
+
+    function getUsername() {
+        dispatch(saveUsername(currentUser));
     }
 
     return (
@@ -74,6 +82,8 @@ function App() {
                 {currentUser && (
                     <button disabled={loading || !currentUser} onClick={handleLogout}>Log Out</button>
                 )}
+
+                {currentUser && getUsername()}
             </div>
             <div>
                 <br />
