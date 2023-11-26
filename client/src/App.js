@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import Axios from 'axios';
+
 import { GoogleLogin } from '@react-oauth/google';
 import { signup, login, logout, useAuth } from "./firebase";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { saveUsername } from './redux/slices/saveUsernameSlice';
+import { saveUsername, saveUsernameId } from './redux/slices/saveUsernameSlice';
 
 import './App.css';
 
@@ -26,8 +28,8 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
-    const userName = useSelector((state) => state.saveUsername.usernameId);
     const dispatch = useDispatch();
+    const userName = useSelector((state) => state.saveUsername.username);
 
     async function handleSignup() {
         setLoading(true);
@@ -61,26 +63,25 @@ function App() {
         setLoading(false);
     }
 
+    async function getUsername() {
+        await Axios.get("http://localhost:5000/getUsername", {
+            params: {
+                uid: userName
+            }
+        }).then((response) => {
+            dispatch(saveUsernameId(response.data));
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
-    useEffect(() => {
-        async function getUsername() {
-            await Axios.get("http://localhost:5000/getUsername", {
-                params: {
-                    uid: userName
-                }
-            }).then((response) => {
-                dispatch(saveUsernameId(response.data));
-                console.log("hello",response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
+    function getUser() {
+        dispatch(saveUsername(currentUser.uid));
 
-        if (currentUser) {
-            dispatch(saveUsername(currentUser.uid));
+        if (userName !== "") {
             getUsername();
         }
-    }, [currentUser]);
+    }
 
     return (
         <Router>
@@ -100,6 +101,8 @@ function App() {
                 {currentUser && (
                     <button disabled={loading || !currentUser} onClick={handleLogout}>Log Out</button>
                 )}
+
+                {currentUser && getUser()}
             </div>
             <div>
                 <br />
