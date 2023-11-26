@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 import FeedPosts from "../components/FeedComponents/FeedPosts";
 
-const Feed = ({currentUser}) => {
+const Feed = () => {
     const [postsData, setPostsData] = useState([]);
 
     const userName = useSelector((state) => state.saveUsername.username);
@@ -31,7 +31,7 @@ const Feed = ({currentUser}) => {
                 Welcome to the feed!
             </h1>
             {userName === "" ? <p>Sign in to create posts</p> : <Link to={`/posts/create-post`}><button>Create post</button></Link>}
-            {postsData && <FeedPosts currentUser={currentUser} postsData={postsData} />}
+            {postsData && <FeedPosts postsData={postsData} />}
         </div>
     );
 };
