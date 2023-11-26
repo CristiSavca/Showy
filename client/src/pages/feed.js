@@ -9,7 +9,7 @@ import FeedPosts from "../components/FeedComponents/FeedPosts";
 const Feed = () => {
     const [postsData, setPostsData] = useState([]);
 
-    const userName = useSelector((state) => state.saveUsername.username);
+    const userName = useSelector((state) => state.saveUsername.usernameId);
 
     useEffect(() => {
         async function getPostsData() {

@@ -15,32 +15,30 @@ const CreateUserPost = () => {
     const [body, setBody] = useState("");
     const [createdPost, setCreatedPost] = useState(false);
 
-    const userName = useSelector((state) => state.saveUsername.username);
+    const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
 
     useEffect(() => {
         async function getUsername() {
             await Axios.get("http://localhost:5000/getUsername", {
                 params: {
-                    uid: userName
+                    uid: userNameId
                 }
             }).then((response) => {
+                //dispatch(saveUsername(response.data));
                 setUsername(response.data);
-                console.log("hello",response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
         clearPost();
-        if (userName !== "") { 
+        if (userNameId !== "") { 
             getUsername();
         } else {
-            setUsername(null);
+            clearPost();
         }
-    }, [userName]);
-
-
+    }, [userNameId]);
 
     function checkPost() {
         if (header === "" || body === "") {
@@ -80,7 +78,7 @@ const CreateUserPost = () => {
                 <textarea className="userText" value={body} onChange={e => setBody(e.target.value)} required />
             </div>
             <div className="bottom-content">
-                {userName === "" ? <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> : 
+                {userNameId === "" ? <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> : 
                     <>
                         <Link to={'/feed'}><button onClick={() => checkPost()}>post</button></Link> 
                         <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>

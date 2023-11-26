@@ -78,10 +78,6 @@ function App() {
 
     function getUser() {
         dispatch(saveUsernameId(currentUser.uid));
-
-        if (userNameId !== "") {
-            getUsername();
-        }
     }
 
     return (
