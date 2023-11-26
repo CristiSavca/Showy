@@ -28,8 +28,9 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
+    // Used to get displayed username
     const dispatch = useDispatch();
-    const userName = useSelector((state) => state.saveUsername.username);
+    const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
     async function handleSignup() {
         setLoading(true);
@@ -66,19 +67,19 @@ function App() {
     async function getUsername() {
         await Axios.get("http://localhost:5000/getUsername", {
             params: {
-                uid: userName
+                uid: userNameId
             }
         }).then((response) => {
-            dispatch(saveUsernameId(response.data));
+            dispatch(saveUsername(response.data));
         }).catch((error) => {
             console.log(error);
         });
     }
 
     function getUser() {
-        dispatch(saveUsername(currentUser.uid));
+        dispatch(saveUsernameId(currentUser.uid));
 
-        if (userName !== "") {
+        if (userNameId !== "") {
             getUsername();
         }
     }
