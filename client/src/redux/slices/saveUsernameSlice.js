@@ -7,11 +7,11 @@ const usernameSlice = createSlice({
   },
   reducers: {
     saveUsername: (state, action) => {
-      state.username = action.payload.username;
+      state.username = action.payload;
     },
   }
 })
 
-export const { saveUsername } = counterSlice.actions
+export const { saveUsername } = usernameSlice.actions
 
 export default usernameSlice.reducer;

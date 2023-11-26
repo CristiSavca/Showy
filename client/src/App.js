@@ -61,7 +61,7 @@ function App() {
     }
 
     function getUsername() {
-        dispatch(saveUsername(currentUser));
+        dispatch(saveUsername(currentUser.uid));
     }
 
     return (
