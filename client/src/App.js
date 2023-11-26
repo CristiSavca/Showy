@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { signup, login, logout, useAuth } from "./firebase";
 
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { saveUsername } from './redux/slices/saveUsernameSlice';
 
 import './App.css';
@@ -26,6 +26,7 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
+    const userName = useSelector((state) => state.saveUsername.usernameId);
     const dispatch = useDispatch();
 
     async function handleSignup() {
@@ -53,6 +54,7 @@ function App() {
         try {
             await logout();
             dispatch(saveUsername(""));
+            dispatch(saveUsernameId(""));
         } catch {
             alert("Error!");
         }
@@ -61,14 +63,24 @@ function App() {
 
 
     useEffect(() => {
+        async function getUsername() {
+            await Axios.get("http://localhost:5000/getUsername", {
+                params: {
+                    uid: userName
+                }
+            }).then((response) => {
+                dispatch(saveUsernameId(response.data));
+                console.log("hello",response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
         if (currentUser) {
+            dispatch(saveUsername(currentUser.uid));
             getUsername();
         }
     }, [currentUser]);
-
-    function getUsername() {
-        dispatch(saveUsername(currentUser.uid));
-    }
 
     return (
         <Router>

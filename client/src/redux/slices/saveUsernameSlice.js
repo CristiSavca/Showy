@@ -1,17 +1,21 @@
-import { createSlice, configureStore } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 const usernameSlice = createSlice({
   name: 'saveUsername',
   initialState: {
-    username: ""
+    username: "",
+    usernameId: "",
   },
   reducers: {
     saveUsername: (state, action) => {
       state.username = action.payload;
     },
+    saveUsernameId: (state, action) => {
+      state.usernameId = action.payload;
+    },
   }
-})
+});
 
-export const { saveUsername } = usernameSlice.actions
+export const { saveUsername, saveUsernameId } = usernameSlice.actions
 
 export default usernameSlice.reducer;
