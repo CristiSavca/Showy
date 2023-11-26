@@ -26,7 +26,6 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
-    //const getUsername = useSelector((state) => state.saveUsername.username);
     const dispatch = useDispatch();
 
     async function handleSignup() {
@@ -60,6 +59,13 @@ function App() {
         setLoading(false);
     }
 
+
+    useEffect(() => {
+        if (currentUser) {
+            getUsername();
+        }
+    }, [currentUser]);
+
     function getUsername() {
         dispatch(saveUsername(currentUser.uid));
     }
@@ -82,8 +88,6 @@ function App() {
                 {currentUser && (
                     <button disabled={loading || !currentUser} onClick={handleLogout}>Log Out</button>
                 )}
-
-                {currentUser && getUsername()}
             </div>
             <div>
                 <br />
@@ -93,10 +97,10 @@ function App() {
             {/* From the first block */}
             <Navbar />
             <Routes>
-                <Route exact path='/feed' element={<Feed currentUser={currentUser} />} />
+                <Route exact path='/feed' element={<Feed />} />
                 <Route path='/profile' element={currentUser ? <Profile /> : <div>Please sign in to view your profile.</div>} />
                 <Route path='/posts/:id' element={<WholeUserPost />} />
-                <Route path='/posts/create-post' element={<CreateUserPost currentUsername={currentUser} />} />
+                <Route path='/posts/create-post' element={<CreateUserPost />} />
             </Routes>
         </Router>
     );
