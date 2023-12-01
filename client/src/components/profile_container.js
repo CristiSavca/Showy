@@ -11,9 +11,9 @@ const ProfileContainer = ({disabled, scale, component, defaultPosition}) => {
         <Draggable style={{border:'2px solid blue'}} defaultPosition={defaultPosition} scale={scale} disabled={disabled} onDrag={(e, data) => trackPos(data)} onStop={()=>{}} >
             <div className="box">
                 {component? component: <h1> Profile component goes here </h1>}
-                <div>
+                {/* <div>
                     x: {position.x.toFixed(0)}, y: {position.y.toFixed(0)}
-                </div>
+                </div> */}
             </div>
         </Draggable>
     );
