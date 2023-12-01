@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { useAuth, upload } from '../firebase';
+import { useAuth } from '../firebase';
 import ActivityTracker from '../components/contributions';
 import ProfilePic from '../components/profile_picture';
 import ProfileContainer from '../components/profile_container';
@@ -27,10 +27,8 @@ export default function Profile() {
 
     // });
     const example_data = [
-        {component: <>hello</>, 
-        location:   {x: 0, y: 0}}, 
-        {component: <>hello</>, 
-        location:   {x: 0, y: 0}}, 
+        // {component: <h1>{currentUser.email}'s Account</h1>, 
+        // location:   {x: 0, y: 0}}, 
         {component: <ProfilePic/>, 
         location:   {x: 0, y: 0}}, 
         {component: <ActivityTracker/>, 
@@ -42,7 +40,7 @@ export default function Profile() {
             {/* Picture Upload */}
 
             {/* Contribution Graph */}
-            <h1> {currentUser.email}'s Account</h1>
+            {currentUser?.email ? <h1> {currentUser.email}'s Account</h1> : null}
             <button onClick={()=> toggleEditing()}> {buttonText}</button>
             {example_data.map((item)=> <ProfileContainer disabled={!isEditing} defaultPosition={item.location} component={item.component}/>)}
             {/* <ProfilePic/> */}
