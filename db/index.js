@@ -86,7 +86,7 @@ app.get("/getUsername", async (req, res) => {
 
 app.get("/getLikesCounter", async (req, res) => {
     let postID = req.query.postId;
-    const postLikesNumber = await oneDatabase.getLikesCounter(postID);
+    const postLikesNumber = await oneDatabase.getLikeCounter(postID);
     res.send(postLikesNumber);
 });
 
@@ -106,8 +106,16 @@ app.get("/getPost", async (req, res) => {
     res.send(post);
 });
 
+app.get("/getUserLiked", async (req, res) => {
+    let postID = req.query.postId;
+    let userID = req.query.username;
+    const liked = await oneDatabase.userLiked(postID, userID);
+
+    res.send(liked);
+});
+
 app.get("/getPosts", async (req, res) => {
-    const posts = await oneDatabase.getPostsSorted("poster_id", "desc", -1);
+    const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
     const postsList = [];
     //console.log(posts[0]);
 
@@ -131,24 +139,23 @@ app.get("/getPosts", async (req, res) => {
 });
 
 app.patch("/addLike", async (req, res) => {
-    // let userID = req.query.uid;
-    // let username = await oneDatabase.getUsernameFromId(userID);
-    // Get username
-    // get post id
-    // add like
+    let userID = req.query.username;
+    let postID = req.query.postId;
+    //let username = await oneDatabase.getUsernameFromId(userID);
 
-    // let post = req.body;
-    // let postID = post.postId;
-    // let user = 
-    // let addLike = await oneDatabase.incrementLikes(postId, userId);
-    
+    let incrementedLike = await oneDatabase.incrementLikes(userID, postID);
+
+    res.send(incrementedLike);
 });
 
-app.patch("removeLike", async (req, res) => {
-    
-    // get username
-    // get post id
-    // remove the like
+app.patch("/removeLike", async (req, res) => {
+    let userID = req.query.username;
+    let postID = req.query.postId;
+    //let username = await oneDatabase.getUsernameFromId(userID);
+
+    let decrementedLike = await oneDatabase.decrementLikes(userID, postID);
+
+    res.send(decrementedLike);
 });
 
 app.post("/createPost", async (req, res) => {
