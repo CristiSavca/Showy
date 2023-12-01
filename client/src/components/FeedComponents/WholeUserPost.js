@@ -82,11 +82,12 @@ const WholeUserPost = () => {
                                     postId={postData.postId} />
         }
 
+        {/* NEED TO UPDATE COMMENTS */}
         <div className="whole-post-comment-box">
-          <CreateComment /> {/* where the username is put in as a prop and id of the post */}
+          <CreateComment />
         </div>
         <>
-          <CommentsDisplay commentsData={commentsData}/> {/* TODO NEED TO CHANGE TO postData.replies */}
+          <CommentsDisplay commentsData={commentsData}/>
         </>
       </div>
     )
