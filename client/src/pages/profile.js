@@ -25,10 +25,10 @@ const Profile = () => {
             <h1>Name here</h1>
             <button onClick={()=> toggleEditing()}> {buttonText}</button>
             {example_data.map((item)=> <ProfileContainer disabled={!isEditing} defaultPosition={item.location} component={item.component}/>)}
-            <ProfileContainer disabled={!isEditing} scale={1} component={<h2>This is my description, I am a coder! </h2>} /> 
+            {/* <ProfileContainer disabled={!isEditing} scale={1} component={<h2>This is my description, I am a coder! </h2>} /> 
             
             <ProfileContainer disabled={!isEditing} scale={1}/>
-            <ProfileContainer disabled={!isEditing} scale={1}/>
+            <ProfileContainer disabled={!isEditing} scale={1}/> */}
         </>
     );
 };
