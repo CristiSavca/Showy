@@ -1,7 +1,6 @@
 import Axios from 'axios';
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
 import { useSelector } from 'react-redux';
 
 import FeedPosts from "../components/FeedComponents/FeedPosts";
@@ -16,7 +15,6 @@ const Feed = () => {
             await Axios.get("http://localhost:5000/getPosts")
             .then((response) => {
                 setPostsData(response.data);
-                //console.log(response.data);
             }).catch((error) => {
                 console.log(error);
             });
@@ -30,8 +28,8 @@ const Feed = () => {
             <h1>
                 Welcome to the feed!
             </h1>
-            {userNameId === "" ? <p>Sign in to create posts</p> : <Link to={`/posts/create-post`}><button>Create post</button></Link>}
-            {postsData && <FeedPosts postsData={postsData} />}
+            {userNameId === '' ? <p>Sign in to create posts</p> : <Link to={`/posts/create-post`}><button>Create post</button></Link>}
+            {postsData && <FeedPosts postsData={postsData} currentUsername={userNameId} />}
         </div>
     );
 };

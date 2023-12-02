@@ -1,6 +1,3 @@
-// import { collection, setDoc, getDocs } from "firebase/firestore";
-// import { db } from '../../db';
-
 import { useState } from 'react';
 
 //  add {username, commentTo} back as prop

@@ -1,10 +1,6 @@
-import { useSelector } from 'react-redux';
-
 import UserPost from "./UserPost";
 
-const FeedPosts = ({postsData}) => {
-  const userNameId = useSelector((state) => state.saveUsername.usernameId);
-
+const FeedPosts = ({postsData, currentUsername}) => {
   return (
     <>      
       {(typeof postsData === "undefined") ? (<p>Loading...</p>)
@@ -14,7 +10,7 @@ const FeedPosts = ({postsData}) => {
                                                   postText={post.body} 
                                                     likes={post.likes} 
                                                       postId={post.postId}
-                                                        currentUsername={userNameId} />)
+                                                        currentUsername={currentUsername} />)
           )}
     </>
   )
