@@ -26,7 +26,7 @@ app.get("/getPost", async (req, res) => {
     let postID = req.query.postId;
     const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
     const currentPost = onePost[0]._fieldsProto;
-    let post = {
+    const post = {
         postId: currentPost.id.stringValue,
         username: currentPost.poster_id.stringValue,
         header: currentPost.title.stringValue,
@@ -54,7 +54,7 @@ app.get("/getPosts", async (req, res) => {
         const currentPostUser = await oneDatabase.getUserById(currentPost.poster_id.stringValue);
         //const posterUsername = currentPostUser._fieldsProto.username.stringValue;
         //console.log(currentPost.title.stringValue + " posted by:" + currentPost.poster_id.stringValue + " - " + currentPost.body.stringValue);
-        let post = {
+        const post = {
             postId: currentPost.id.stringValue,
             username: currentPost.poster_id.stringValue,
             header: currentPost.title.stringValue,

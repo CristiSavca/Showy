@@ -1,7 +1,7 @@
 import Axios from 'axios';
-
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import UserPost from "./UserPost";
 import CommentsDisplay from "./CommentsDisplay";
@@ -10,8 +10,10 @@ import CreateComment from './CreateComment';
 const WholeUserPost = () => {
     const { id } = useParams();
 
-    const [postData, setPostData] = useState({});
+    const [postData, setPostData] = useState(null);
     const [textContent, setTextContent] = useState("");
+
+    const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
     useEffect(() => {
       async function getPostData() {
@@ -72,15 +74,17 @@ const WholeUserPost = () => {
 
     return (
       <div className="whole-post-box">
-        {(typeof postData === "undefined") ? (<p>Loading...</p>) : 
+        {postData === null ? (<p>Loading...</p>) : 
                 <UserPost key={postData.postId}
                     username={postData.username} 
                         header={postData.header} 
                             postText={postData.body} 
                                 likes={postData.likes} 
-                                    postId={postData.postId} />
-        }
+                                    postId={postData.postId}
+                                        currentUsername={userNameId} />
 
+        }
+        
         {/* NEED TO UPDATE COMMENTS */}
         <div className="whole-post-comment-box">
           <CreateComment />
