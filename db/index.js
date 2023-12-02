@@ -13,7 +13,6 @@ const oneDatabase = new Database(firebaseKey, firebaseURL);
 app.get("/getUsername", async (req, res) => { 
     let userID = req.query.uid;
     let username = await oneDatabase.getUsernameFromId(userID);
-    //console.log(username);
     res.send(username);
 });
 
@@ -35,7 +34,6 @@ app.get("/getPost", async (req, res) => {
         likes: currentPost.likes.integerValue
     };
 
-    //console.log(post);
     res.send(post);
 });
 
@@ -50,7 +48,6 @@ app.get("/getUserLiked", async (req, res) => {
 app.get("/getPosts", async (req, res) => {
     const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
     const postsList = [];
-    //console.log(posts[0]);
 
     for (let i = 0; i < posts.length; i++) {
         const currentPost = posts[i]._fieldsProto;
@@ -67,28 +64,22 @@ app.get("/getPosts", async (req, res) => {
         postsList.push(post);
     }
 
-    //console.log(postsList);
     res.send(postsList);
 });
 
-app.patch("/addLike", async (req, res) => {
-    let postID = req.query.postId;
-    let userID = req.query.username;
-    //let username = await oneDatabase.getUsernameFromId(userID);
+app.post("/addLike", async (req, res) => {
+    let postID = req.body.params.postId;
+    let userID = req.body.params.username;
 
     let incrementedLike = await oneDatabase.incrementLikes(postID, userID);
-
     res.send(incrementedLike);
 });
 
-app.patch("/removeLike", async (req, res) => {
-    let postID = req.query.postId;
-    let userID = req.query.username;
-    console.log(postID, userID);
-    //let username = await oneDatabase.getUsernameFromId(userID);
+app.post("/removeLike", async (req, res) => {
+    let postID = req.body.params.postId;
+    let userID = req.body.params.username;
 
     let decrementedLike = await oneDatabase.decrementLikes(postID, userID);
-
     res.send(decrementedLike);
 });
 
