@@ -7,6 +7,7 @@ import { initializeApp, applicationDefault, cert } from 'firebase-admin/app';
 import { getFirestore, Timestamp, FieldValue, Filter } from 'firebase-admin/firestore';
 import admin from "firebase-admin";
 
+
 class Database {
 	
 	constructor(serviceAccount, databaseURL) {
@@ -170,7 +171,9 @@ class Database {
 			likes: 0,
 			poster_id: posterId,
 			posted: timestamp,
-			liked: []
+			liked: [],
+			replies: [],
+			parent_post: ""
 		}
 		
 		const res = await this.forumCollection.add(post);
@@ -242,34 +245,48 @@ class Database {
 		}
 	}
 	
+	// Returns post fields based on the ID given. If the id does not lead to a post, returns null
 	async getPostById(postId) {
 		const post = await this.forumCollection.doc(postId).get();
+		if (post == null) {
+			return null;
+		}
 		return post;
 	}
 	
-	
+	// Returns the integer value for the number of likes a post has. If the id does not lead to a post, returns null
 	async getLikeCounter(postId) {
 		const post = await this.getPostById(postId);
+		if (post == null) {
+			return null;
+		}
 		return post._fieldsProto.likes.integerValue;
 	}
 	
+	// Returns the array of user IDs who have liked the post. If the id does not lead to a post, returns null
 	async getLikes(postId) {
 		const post = await this.getPostById(postId);
+		if (post == null) {
+			return null;
+		}
 		return post._fieldsProto.liked.arrayValue.values;
 	}
 	
+	// Returns a query of posts where a user ID appears in the list of user likes.
 	async getUserLikedPosts(userId) {
-		
+		var res = await this.forumCollection.where('liked', 'array-contains', userId);
+		return res;
 	}
 	
+	// Returns true if a user has liked a particular post, false if the user has not, or if either post or user do not exist..
 	async userLiked(postId, userId) {
 		var res = await this.forumCollection.where('liked', 'array-contains', userId);
 		res = await res.where('id', '==', postId).get();
 		return !res.empty;
 	}
 	
+	// Increments the like counter and adds user ID to the list of user likes. Returns false if the user has already liked it.
 	async incrementLikes(postId, userId) {
-		
 		const liked = await this.userLiked(postId, userId);
 		if (liked) {
 			return false;
@@ -285,6 +302,7 @@ class Database {
 		return true;
 	}
 	
+	// Like above, but with decrementing. Returns false if the user has not liked it.
 	async decrementLikes(postId, userId) {
 		
 		const liked = await this.userLiked(postId, userId);
@@ -301,6 +319,56 @@ class Database {
 		
 		return true;
 	}
+	
+	// Creates a post, similar to makePost(). It will add the post as a reply to the supplied parent post ID, and set that post as this post's parent. Returns false if the parent post does not exist.
+	async replyToPost(postId, posterId, title, body) {
+		const parentPost = await this.getPostById(postId);
+		if (parentPost == null) {
+			return false;
+		}
+		
+		// Create & make post
+		const timestamp = admin.firestore.Timestamp.now();
+		const jsTimestamp = timestamp.toDate();
+		
+		const post = {
+			title: title,
+			body: body,
+			likes: 0,
+			poster_id: posterId,
+			posted: timestamp,
+			liked: [],
+			replies: [],
+			parent_post: postId
+		}
+		
+		const res = await this.forumCollection.add(post);
+		const newPost = this.forumCollection.doc(res.id);
+		await newPost.update({id: res.id});
+		
+		// Add post to list of replies to parent post
+		const overwrite = await this.forumCollection.doc(postId);
+		await overwrite.update({replies: FieldValue.arrayUnion(res.id)});
+	}
+	
+	// Returns null if the post ID points to a non-existing post. Otherwise returns an array containing the IDs of posts that reply to this one.
+	async getReplies(postId) {
+		const post = await this.getPostById(postId);
+		if (post == null) {
+			return null;
+		}
+		return post._fieldsProto.replies.arrayValue.values;
+	}
+	
+	// Returns null if the post ID points to a non-existing post, or if the parent post ID to this post does not exist. Otherwise returns the ID of the parent post.
+	async getParentPost(postId) {
+		const post = await this.getPostById(postId);
+		if (post == null) {
+			return null;
+		}
+		return post._fieldsProto.parent_post.stringValue;
+	}
+	
 	
 
 }
