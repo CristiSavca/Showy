@@ -369,6 +369,33 @@ class Database {
 		return post._fieldsProto.parent_post.stringValue;
 	}
 	
+	// Overwrites the user's profile customizations with the array of components supplied.
+	async overwriteUserCustomizations(userId, newCustomsArr) {
+		const user = await this.usersCollection.doc(userId);
+		if (user == null) {
+			return false;
+		}
+		
+		await user.update({
+			customizations: FieldValue.delete()
+		});
+		
+		for (var i = 0; i < newCustomsArr.length; i ++) {
+			await user.update({
+				customizations: FieldValue.arrayUnion(newCustomsArr[i])
+			});
+		}
+	}
+	
+	// Returns the current customizations of a user's profile as an array.
+	async getUserCustomizations(userId) {
+		const user = await this.getUserById(userId);
+		if (user == null || user._fieldsProto.customizations == null) {
+			return null;
+		}
+		
+		return user._fieldsProto.customizations.arrayValue.values;
+	}
 	
 
 }

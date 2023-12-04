@@ -18,7 +18,7 @@ const dbTest = new Database(firebaseKey, firebaseURL);
 
 var repeat = true;
 while (repeat) {
-	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (aa)dd user from authenticator, (ch)eck post, (lp)ike post, (e)xit: ");
+	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (aa)dd from auth, (ch)eck post, (lp)ike post, (tc)est customs, (e)xit: ");
 	
 	// CHECK ACCOUNT INFO
 	if (userInput == "a") {
@@ -161,11 +161,32 @@ while (repeat) {
 		await dbTest.addUserFromAuthenticator(uuid, email);
 	}
 	
+	if (userInput == "tc") {
+		const userId = prompt("Enter user ID: ");
+		
+		var customizations = await dbTest.getUserCustomizations(userId);
+		console.log("Current user customizations: ");
+		console.log(customizations);
+		
+		const testArray = [
+		"{component: <ProfilePic/>, location: {x: 0, y: 0}}",
+		"{component: <ActivityTracker/>, location: {x: 0, y: 0}}"
+		];
+		
+		await dbTest.overwriteUserCustomizations(userId, testArray);
+		
+		customizations = await dbTest.getUserCustomizations(userId);
+		console.log("Current user customizations: ");
+		console.log(customizations);
+	}
+	
 	// EXIT
 	if (userInput == "e") {
 		userInput = prompt("Exit? y/n: ");
 		if (userInput == "y") {
 			repeat = false;
 		}
+		
 	}
+	
 }
