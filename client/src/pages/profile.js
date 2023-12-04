@@ -26,7 +26,7 @@ export default function Profile() {
     // useEffect(() => {
 
     // });
-    const example_data = [
+    let example_data = [
         // {component: <h1>{currentUser.email}'s Account</h1>, 
         // location:   {x: 0, y: 0}}, 
         {component: <ProfilePic/>, 
@@ -34,6 +34,11 @@ export default function Profile() {
         {component: <ActivityTracker/>, 
         location:   {x: 0, y: 0}}, 
     ]
+    const setLocation = (index, new_location) =>{
+        example_data[index].location.x = new_location.lastX;
+        example_data[index].location.y = new_location.lastY;
+        console.log(example_data);
+    }
     return (
         <div>
             <h1>Profile Page</h1>
@@ -42,7 +47,7 @@ export default function Profile() {
             {/* Contribution Graph */}
             {currentUser?.email ? <h1> {currentUser.email}'s Account</h1> : null}
             <button onClick={()=> toggleEditing()}> {buttonText}</button>
-            {example_data.map((item)=> <ProfileContainer disabled={!isEditing} defaultPosition={item.location} component={item.component}/>)}
+            {example_data.map((item, index)=> <ProfileContainer parentCallback={setLocation} index={index}disabled={!isEditing} defaultPosition={item.location} component={item.component}/>)}
             {/* <ProfilePic/> */}
             {/* <ActivityTracker /> */}
         </div>
