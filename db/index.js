@@ -156,21 +156,6 @@ app.post("/createPost", async (req, res) => {
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
     res.send(posted);
 });
-// app.get("/getPost", async (req, res) => {
-//     let postID = req.query.postId;
-//     const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
-//     const currentPost = onePost[0]._fieldsProto;
-//     let post = {
-//         postId: currentPost.id.stringValue,
-//         username: currentPost.poster_id.stringValue,
-//         header: currentPost.title.stringValue,
-//         body: currentPost.body.stringValue,
-//         likes: currentPost.likes.integerValue
-//     };
-
-//     //console.log(post);
-//     res.send(post);
-// });
 
 app.patch("/changeCustomizations", async (req, res) => {
     let info = req.body;
