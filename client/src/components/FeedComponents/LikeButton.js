@@ -3,7 +3,7 @@ import Axios from 'axios';
 
 const LikeButton = ({objType, objId, currentLikes, currentUsername}) => {
     const [likedObject, setLikedObject] = useState(false); 
-    const [totalLikes, setLikes] = useState(currentLikes);
+    const [totalLikes, setLikes] = useState(Number(currentLikes));
     const [objectId, setObjectId] = useState(objId);
     const [username, setUsername] = useState(currentUsername);
 
@@ -81,18 +81,20 @@ const LikeButton = ({objType, objId, currentLikes, currentUsername}) => {
 
         if (likedObject) {
             dislike();
+            setLikes(totalLikes - 1);
             return;
         }
         
         if (!likedObject) {
             like();
+            setLikes(totalLikes + 1);
             return;
         }
     }
 
     return (
         <>
-            <button onClick={() => {clickLike()}}>{likedObject ? 'Dislike ' + totalLikes: 'Like ' + totalLikes}</button>
+            <button onClick={() => {clickLike()}}>{likedObject ? 'Dislike ' : 'Like '} {totalLikes}</button>
         </>
     )
 }

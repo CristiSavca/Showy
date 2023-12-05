@@ -18,7 +18,7 @@ app.get("/getUsername", async (req, res) => {
 
 app.get("/getLikesCounter", async (req, res) => {
     let postID = req.query.postId;
-    const postLikesNumber = await oneDatabase.getLikeCounter(postID);
+    let postLikesNumber = await oneDatabase.getLikeCounter(postID);
     res.send(postLikesNumber);
 });
 

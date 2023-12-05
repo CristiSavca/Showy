@@ -7,23 +7,7 @@ const CreateComment = () => {
 
     // TODO REPLACE WITH DB FUNCTION for saving comment to user
     async function saveComment() {
-        // setCompletedComment(comment);
 
-        // if (completedComment !== "") {
-        //     try {
-        //         const docRef = await setDoc(collection(db, "posts"), {
-        //             username: username, 
-        //             commentText: completedComment,
-        //             likes: 0,
-        //             replies: [],
-        //             key: username + "-" + 8, // FIX the key
-        //             commentTo: commentTo
-        //         });
-        //         console.log("Document written with ID: ", docRef.id);
-        //       } catch {
-    
-        //       }
-        // }
     }
 
     return (
