@@ -1,15 +1,21 @@
-import React, { useRef, useState } from 'react';
-import './App.css';
-import Navbar from './components/Navbar';
+import React, { useEffect, useRef, useState } from 'react';
+import Axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { GoogleLogin } from '@react-oauth/google';
+import { signup, login, logout, useAuth } from "./firebase";
+
+import './App.css';
+
+import Navbar from './components/Navbar';
 import Feed from './pages/feed';
 import Profile from './pages/profile';
 import WholeUserPost from './components/FeedComponents/WholeUserPost';
 import CreateUserPost from './components/FeedComponents/CreateUserPost';
-import { GoogleLogin } from '@react-oauth/google';
-import { signup, login, logout, useAuth } from "./firebase";
 
 function App() {
+
+
     // State and ref from the second block
     const [loading, setLoading] = useState(false);
     const currentUser = useAuth();
@@ -77,10 +83,10 @@ function App() {
             {/* From the first block */}
             <Navbar />
             <Routes>
-                <Route exact path='/feed' element={<Feed />} />
+                <Route exact path='/feed' element={<Feed currentUser={currentUser} />} />
                 <Route path='/profile' element={currentUser ? <Profile /> : <div>Please sign in to view your profile.</div>} />
                 <Route path='/posts/:id' element={<WholeUserPost />} />
-                <Route path='/posts/create-post' element={<CreateUserPost />} />
+                <Route path='/posts/create-post' element={<CreateUserPost currentUsername={currentUser} />} />
             </Routes>
         </Router>
     );

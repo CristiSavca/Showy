@@ -1,50 +1,84 @@
-// import { collection, addDoc, setDoc } from "firebase/firestore";
-// import { db } from '../../db';
 
-import { useState } from 'react';
+// TODO
+// Rename css div
 
-const CreateUserPost = ({username}) => {
+import Axios from 'axios';
+
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+const CreateUserPost = ({currentUsername}) => {
+    const [username, setUsername] = useState(null);
     const [header, setHeader] = useState("");
-    const [userText, setUserText] = useState("");
-    const [datas, setDatas] = useState([]);
+    const [body, setBody] = useState("");
+    const [createdPost, setCreatedPost] = useState(false);
+
+    useEffect(() => {
+        async function getUsername() {
+            await Axios.get("http://localhost:5000/getUsername", {
+                params: {
+                    uid: currentUsername.uid
+                }
+            }).then((response) => {
+                setUsername(response.data);
+                console.log("hello",response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        getUsername();
+    }, [currentUsername]);
+
+
+
+    function checkPost() {
+        if (header === "" || body === "") {
+            alert("Please fill out post first.");
+        } else {
+            createPost();
+        }
+    }
     
-    // consider getting username here by query 
-    async function addAPost() {
-        // if (header !== "" && userText !== "") {
-        //     try {
-        //         const docRef = await addDoc(collection(db, "posts"), {
+    async function createPost() {
+        await Axios.post('http://localhost:5000/createPost', {
+            username: username,
+            header: header,
+            body: body,
+        })
+        .then((response) => {
+            setCreatedPost(response);
+            console.log(response.status);
+        }).catch((error) => {
+                console.log(error);
+        });
+
         //             username: "bob", 
         //             header: header,
         //             postText: userText,
         //             likes: 0,
         //             comments: [],
-        //         });
-
-        //         setDoc(docRef, {key: docRef.id}, {merge: true});
-        //     } catch {
-
-        //     }
-        
-        // }
     }
 
-    // SEND THE USER BACK TO FEED
-    function cancelPost() {
-        
+    function clearPost() {
+        setUsername(null);
+        setHeader("");
+        setBody("");
     }
-    
+
     return (
         <div className="post-box">
-            <p>{username}</p>
+            {/* { console.log(createdPost)} */}
+            {username && <p>{username}</p>}
             <label>Header:</label> 
             <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} required />
             <div className="post-content">
                 <label>Text:</label> 
-                <textarea className="userText" value={userText} onChange={e => setUserText(e.target.value)} required />
+                <textarea className="userText" value={body} onChange={e => setBody(e.target.value)} required />
             </div>
             <div className="bottom-content">
-                <button onClick={() => addAPost()}>post</button>
-                <button onClick={() => cancelPost()}>cancel</button>
+                <button onClick={() => checkPost()}>post</button>
+                <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>
             </div>
         </div>
     )

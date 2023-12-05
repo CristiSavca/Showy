@@ -45,8 +45,9 @@
   border: 0.3rem;
   border-style: solid;
   border-color: black;
-  background-color: azure;
+  background-color: lightgrey;
   margin-bottom: 2rem;
+  color: black;
 }
 
 .post-content {
@@ -57,7 +58,8 @@
   border: 0.3 rem;
   border-style: solid;
   border-color: black;
-  background-color: lightblue;
+  background-color: grey;
+  color: black;
   margin-bottom: 1rem;
 }
 
@@ -76,7 +78,7 @@
   border: 0.3rem;
   border-style: solid;
   border-color: black;
-  background-color: azure;
+  background-color: lightgrey;
   margin-bottom: 2rem;
 }
 
@@ -85,7 +87,7 @@
   height: 15%;
   border: 0.3rem;
   border-style: solid;
-  border-color: blue;
+  border-color: black;
   margin-top: 1rem;
 }
 
@@ -108,6 +110,7 @@
   border: 0.3rem;
   border-style: solid;
   border-color: black;
+  color: black;
 }
 
 .signup-form,

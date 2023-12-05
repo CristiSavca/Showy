@@ -1,5 +1,4 @@
-// import { doc, getDoc } from "firebase/firestore";
-// import { db } from '../../db';
+import Axios from 'axios';
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -11,25 +10,25 @@ import CreateComment from './CreateComment';
 const WholeUserPost = () => {
     const { id } = useParams();
 
-    const [postData, setPostData] = useState({ // TODO EMPTY THIS LATER
-      "key": "Person2-Dogs-are-good-pets", 
-      "username": "Person2", 
-      "header": "Dogs are good pets", 
-      "postText": "Source? me", 
-      "likes": 3
-    });
+    const [postData, setPostData] = useState({});
+    const [textContent, setTextContent] = useState("");
 
-    const [textContent, setTextContent] = useState(""); // MAKE SURE if the person is signed in they can make comments
+    useEffect(() => {
+      async function getPostData() {
+        await Axios.get("http://localhost:5000/getPost", {
+          params: {
+            postId: id
+          }
+        }).then((response) => {
+          setPostData(response.data);
+          console.log(response.data);
+        }).catch((error) => {
+          console.log(error);
+        });
+      }
 
-    // async function getPostData() {
-    //   const userPostDocRef = doc(db, "posts", id);
-    //   const userPostDoc = await getDoc(userPostDocRef);
-    //   setPostData(userPostDoc.data());
-    // }
-
-    // useEffect(() => {
-    //   getPostData();
-    // }, [postData]);
+      getPostData();
+    }, []);
 
     const commentsData = [
       {
@@ -75,12 +74,12 @@ const WholeUserPost = () => {
     return (
       <div className="whole-post-box">
         {(typeof postData === "undefined") ? (<p>Loading...</p>) : 
-                <UserPost key={postData.key}
+                <UserPost key={postData.postId}
                     username={postData.username} 
                         header={postData.header} 
-                            postText={postData.postText} 
+                            postText={postData.body} 
                                 likes={postData.likes} 
-                                    postId={postData.key} />
+                                    postId={postData.postId} />
         }
 
         <div className="whole-post-comment-box">
