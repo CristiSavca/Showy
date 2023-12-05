@@ -1,4 +1,4 @@
-
+import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { useAuth } from '../firebase';
@@ -9,9 +9,11 @@ import ProfileContainer from '../components/profile_container';
 export default function Profile() {
     // State from the second block
     const currentUser = useAuth();
-     const [isEditing, setisEditing] = useState(false);
+    const [isEditing, setisEditing] = useState(false);
     const [buttonText, setButtonText] = useState('Press me to Enable Editing');
-  
+    console.log(currentUser);
+
+    // const componentLocations = getUserCustomizations(currentUser?.uid) //|| "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
   
   function toggleEditing(){
         setisEditing(!isEditing)
@@ -24,8 +26,23 @@ export default function Profile() {
     console.log( 'currentUser',currentUser)
     // Effect from the second block
     // useEffect(() => {
+    //     // const currentUser = useAuth();
+    //     // async function getUserCustomizations() {
+    //     //     await Axios.get("http://localhost:5000/getUsername", {
+    //     //         params: {
+    //     //             uid: currentUsername.uid
+    //     //         }
+    //     //     }).then((response) => {
+    //     //         setUsername(response.data);
+    //     //         console.log("hello",response.data);
+    //     //     }).catch((error) => {
+    //     //         console.log(error);
+    //     //     });
+    //     // }
 
-    // });
+    //     getUsername();
+    // }, [currentUsername]);
+
     let example_data = [
         // {component: <h1>{currentUser.email}'s Account</h1>, 
         // location:   {x: 0, y: 0}}, 
