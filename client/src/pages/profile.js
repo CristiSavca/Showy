@@ -9,7 +9,9 @@ import ProfileContainer from '../components/profile_container';
 export default function Profile() {
     // State from the second block
     const currentUser = useAuth();
+    const [username, setUsername] = useState(null);
     const [isEditing, setisEditing] = useState(false);
+    const [customization, setCustomization] = useState(false);
     const [buttonText, setButtonText] = useState('Press me to Enable Editing');
     console.log(currentUser);
 
@@ -25,23 +27,35 @@ export default function Profile() {
 
     console.log( 'currentUser',currentUser)
     // Effect from the second block
-    // useEffect(() => {
-    //     // const currentUser = useAuth();
-    //     // async function getUserCustomizations() {
-    //     //     await Axios.get("http://localhost:5000/getUsername", {
-    //     //         params: {
-    //     //             uid: currentUsername.uid
-    //     //         }
-    //     //     }).then((response) => {
-    //     //         setUsername(response.data);
-    //     //         console.log("hello",response.data);
-    //     //     }).catch((error) => {
-    //     //         console.log(error);
-    //     //     });
-    //     // }
+    useEffect(() => {
+        async function getUsername() {
+            await Axios.get("http://localhost:5000/getUsername", {
+                params: {
+                    uid: currentUser.uid
+                }
+            }).then((response) => {
+                setUsername(response.data);
+                console.log("hello",response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
-    //     getUsername();
-    // }, [currentUsername]);
+        // async function setCustomization() {
+        //     await Axios.get("http://localhost:5000/getUsername", {
+        //         params: {
+        //             uid: currentUser.uid
+        //         }
+        //     }).then((response) => {
+        //         setUsername(response.data);
+        //         console.log("hello",response.data);
+        //     }).catch((error) => {
+        //         console.log(error);
+        //     });
+        // }
+
+        getUsername();
+    }, [currentUser]);
 
     let example_data = [
         // {component: <h1>{currentUser.email}'s Account</h1>, 
@@ -62,7 +76,7 @@ export default function Profile() {
             {/* Picture Upload */}
 
             {/* Contribution Graph */}
-            {currentUser?.email ? <h1> {currentUser.email}'s Account</h1> : null}
+            {currentUser?.email ? <h1> {username? username: currentUser.email}'s Account</h1> : null}
             <button onClick={()=> toggleEditing()}> {buttonText}</button>
             {example_data.map((item, index)=> <ProfileContainer parentCallback={setLocation} index={index}disabled={!isEditing} defaultPosition={item.location} component={item.component}/>)}
             {/* <ProfilePic/> */}
