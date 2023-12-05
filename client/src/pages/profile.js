@@ -36,7 +36,7 @@ export default function Profile() {
         setisEditing(!isEditing)
         if(!isEditing){ 
             setButtonText("Press me to Disable Editing");
-
+            changeCustomization();
         }
         else setButtonText("Press me to Enable Editing")
         console.log(isEditing)
