@@ -19,42 +19,59 @@ export default function Profile() {
   
   function toggleEditing(){
         setisEditing(!isEditing)
-        if(!isEditing) setButtonText("Press me to Disable Editing")
+        if(!isEditing){ 
+            setButtonText("Press me to Disable Editing");
+
+        }
         else setButtonText("Press me to Enable Editing")
         console.log(isEditing)
     }
 
 
-    console.log( 'currentUser',currentUser)
+    // console.log( 'currentUser',currentUser)
     // Effect from the second block
     useEffect(() => {
+        Axios.interceptors.request.use(function (config) {
+            // Do something before request is sent
+            console.log('config: ', config)
+            return config;
+          }, function (error) {
+            // Do something with request error
+            return Promise.reject(error);
+          });
+
+        console.log("ID: ", currentUser?.uid)
         async function getUsername() {
             await Axios.get("http://localhost:5000/getUsername", {
                 params: {
-                    uid: currentUser.uid
+                    uid: currentUser?.uid
                 }
             }).then((response) => {
                 setUsername(response.data);
-                console.log("hello",response.data);
+                console.log("Name: ",response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
-        // async function setCustomization() {
-        //     await Axios.get("http://localhost:5000/getUsername", {
-        //         params: {
-        //             uid: currentUser.uid
-        //         }
-        //     }).then((response) => {
-        //         setUsername(response.data);
-        //         console.log("hello",response.data);
-        //     }).catch((error) => {
-        //         console.log(error);
-        //     });
-        // }
+        async function getCustomization() {
+            await Axios.get("http://localhost:5000/getCustomizations", {
+                params: {
+                    uid: currentUser?.uid
+                }
+            }).then((response) => {
+                for(let i = 0; i < response.data.length(); i++){
+                    
+                }
+                setCustomization(response.data);
+                console.log("customizations: ",response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
 
         getUsername();
+        getCustomization();
     }, [currentUser]);
 
     let example_data = [
