@@ -94,7 +94,7 @@ const LikeButton = ({objType, objId, currentLikes, currentUsername}) => {
 
     return (
         <>
-            <button onClick={() => {clickLike()}}>{likedObject ? 'Dislike ' : 'Like '} {totalLikes}</button>
+            <button onClick={() => {clickLike()}}>{likedObject ? 'Unlike ' : 'Like '} {totalLikes}</button>
         </>
     )
 }
