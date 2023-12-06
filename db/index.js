@@ -6,7 +6,7 @@ import { firebaseKey, firebaseURL } from './firebase-key.js';
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 
 const oneDatabase = new Database(firebaseKey, firebaseURL);
 
@@ -87,5 +87,16 @@ app.post("/createPost", async (req, res) => {
     res.send(posted);
 });
 
+app.patch("/changeCustomizations", async (req, res) => {
+    let info = req.body;
+    let custom = await oneDatabase.overwriteUserCustomizations(info.uuid, req.customizations);
+    res.send(custom);
+});
+
+app.get("/getCustomizations", async (req, res) => {
+    let userID = req.query.uid;
+    let custom = await oneDatabase.getUserCustomizations(userID);
+    res.send(custom);
+});
 
 app.listen(5000, () => {console.log("app is running")});

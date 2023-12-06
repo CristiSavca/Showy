@@ -22,7 +22,7 @@ const Comment = ({username, commentText, likes, commentId, replies}) => {
     return (
         <div className="comment">
             <>
-                <p>{username}</p>
+                <strong>{username}</strong>
                 <p>{commentText}</p>
                 <LikeButton currentLikes={likes} /> { /* TODO add id prop to like button */}
             </>
