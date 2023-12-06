@@ -44,10 +44,11 @@
   margin: auto;
   border: 0.3rem;
   border-style: solid;
-  border-color: black;
+  border-color: rgb(74, 73, 73);
   background-color: lightgrey;
   margin-bottom: 2rem;
   color: black;
+  border-radius: 10px;
 }
 
 .post-content {
@@ -111,6 +112,8 @@
   border-style: solid;
   border-color: black;
   color: black;
+  border-radius: 10px;
+  margin: 5px;
 }
 
 .signup-form,
@@ -138,4 +141,7 @@ input,
   border-width: 5px;
   border-color: gray;
   border-style: outset;
+}
+.create-post-button{
+  margin-bottom:10px;
 }
