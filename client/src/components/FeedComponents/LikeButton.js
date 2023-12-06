@@ -74,7 +74,7 @@ const LikeButton = ({objType, objId, currentLikes, currentUsername}) => {
     }
 
     function clickLike() {
-        if (username === '') {
+        if (currentUsername === '') {
             alert("Log in first");
             return;
         }
