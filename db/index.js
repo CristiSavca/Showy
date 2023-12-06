@@ -67,6 +67,16 @@ app.get("/getPosts", async (req, res) => {
     res.send(postsList);
 });
 
+// app.get("/getComments", async (req, res) => {
+//     let postID = req.query.postId;
+
+//     let comments = await oneDatabase.getReplies(postID);
+// });
+
+// app.get("/getReplyPosts", async (req, res) => {
+//     let postIDS = req.params.
+// });
+
 app.post("/addLike", async (req, res) => {
     let postID = req.body.params.postId;
     let userID = req.body.params.username;
@@ -87,6 +97,14 @@ app.post("/createPost", async (req, res) => {
     let post = req.body;
     let posted = await oneDatabase.makePost(post.username, post.header, post.body);
     res.send(posted);
+});
+
+app.post("/createComment", async (req, res) => {
+    let comment = req.body;
+
+    let commented = await oneDatabase.replyToPost(comment.postId, comment.posterId, comment.title, comment.body);
+
+    res.send(commented);
 });
 
 
