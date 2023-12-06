@@ -245,6 +245,24 @@ class Database {
 		}
 	}
 	
+	// Only gets posts that do not have a parent post (aka are not replying to another post)
+	async getPostFeed(orderBy = "posted", order = "desc", x = -1) {
+		var query;
+		if (x >= 0) {
+			query = await this.forumCollection.where("parent_post", "==", "").orderBy(orderBy, order).limit(x).get();
+		}
+		else {
+			query = await this.forumCollection.where("parent_post", "==", "").orderBy(orderBy, order).get();
+		}
+		
+		if (query.docs.empty) {
+			return null;
+		}
+		else {
+			return query.docs;
+		}
+	}
+	
 	// Returns post fields based on the ID given. If the id does not lead to a post, returns null
 	async getPostById(postId) {
 		const post = await this.forumCollection.doc(postId).get();
