@@ -1,21 +1,101 @@
+import { useState, useEffect } from 'react';
+import Axios from 'axios';
 
-import { useState } from 'react';
-
-const LikeButton = ({currentLikes}) => {
+const LikeButton = ({objType, objId, currentLikes, currentUsername}) => {
     const [likedObject, setLikedObject] = useState(false); 
-    const [totalLikes, setLike] = useState(currentLikes);
+    const [totalLikes, setLikes] = useState(Number(currentLikes));
+    const [objectId, setObjectId] = useState(objId);
+    const [username, setUsername] = useState(currentUsername);
 
-    function clickLike() {
-        if (likedObject) {
+    useEffect(() => {
+        getUserLike();
+    }, []);
 
-        } else if (!likedObject) {
-
+    // remember that it will be used for comments as well replace post id
+    async function getUpdatedLikes() {
+        if (objType === "post") {
+            await Axios.get("http://localhost:5000/getLikesCounter", {
+                params: {
+                    postId: objectId
+                }
+            }).then((response) => {
+                setLikes(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     }
+
+    async function getUserLike() {
+        if (objType === "post") {
+            await Axios.get("http://localhost:5000/getUserLiked", {
+                params: {
+                    postId: objectId,
+                    username: username
+                }
+            }).then((response) => {
+                setLikedObject(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        getUpdatedLikes();
+    }
+
+    async function dislike() {
+        if (objType === "post" ) {
+            await Axios.post("http://localhost:5000/removeLike", {
+                params: {
+                    postId: objectId,
+                    username: username
+                }
+            }).then(() => {
+                setLikedObject(false);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
+    async function like() {
+        if (objType === "post") {
+            await Axios.post("http://localhost:5000/addLike", {
+                params: {
+                    postId: objectId,
+                    username: username
+                }
+            }).then(() => {
+                setLikedObject(true);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    }
+
+    function clickLike() {
+        if (username === '') {
+            alert("Log in first");
+            return;
+        }
+
+        if (likedObject) {
+            dislike();
+            setLikes(totalLikes - 1);
+            return;
+        }
+        
+        if (!likedObject) {
+            like();
+            setLikes(totalLikes + 1);
+            return;
+        }
+    }
+
     return (
-        <div>
-            <button onClick={() => {clickLike()}}>Like {totalLikes}</button>
-        </div>
+        <>
+            <button onClick={() => {clickLike()}}>{likedObject ? 'Dislike ' : 'Like '} {totalLikes}</button>
+        </>
     )
 }
 

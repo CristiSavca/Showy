@@ -7,30 +7,38 @@ import Axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-const CreateUserPost = ({currentUsername}) => {
+import { useSelector } from 'react-redux';
+
+const CreateUserPost = () => {
     const [username, setUsername] = useState(null);
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
     const [createdPost, setCreatedPost] = useState(false);
 
+    const userNameId = useSelector((state) => state.saveUsername.usernameId);
+
+
     useEffect(() => {
         async function getUsername() {
             await Axios.get("http://localhost:5000/getUsername", {
                 params: {
-                    uid: currentUsername.uid
+                    uid: userNameId
                 }
             }).then((response) => {
+                //dispatch(saveUsername(response.data));
                 setUsername(response.data);
-                console.log("hello",response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
 
-        getUsername();
-    }, [currentUsername]);
-
-
+        clearPost();
+        if (userNameId !== "") { 
+            getUsername();
+        } else {
+            clearPost();
+        }
+    }, [userNameId]);
 
     function checkPost() {
         if (header === "" || body === "") {
@@ -50,14 +58,8 @@ const CreateUserPost = ({currentUsername}) => {
             setCreatedPost(response);
             console.log(response.status);
         }).catch((error) => {
-                console.log(error);
+            console.log(error);
         });
-
-        //             username: "bob", 
-        //             header: header,
-        //             postText: userText,
-        //             likes: 0,
-        //             comments: [],
     }
 
     function clearPost() {
@@ -68,8 +70,7 @@ const CreateUserPost = ({currentUsername}) => {
 
     return (
         <div className="post-box">
-            {/* { console.log(createdPost)} */}
-            {username && <p>{username}</p>}
+            {username && <p>Username: {username}</p>}
             <label>Header:</label> 
             <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} required />
             <div className="post-content">
@@ -77,8 +78,11 @@ const CreateUserPost = ({currentUsername}) => {
                 <textarea className="userText" value={body} onChange={e => setBody(e.target.value)} required />
             </div>
             <div className="bottom-content">
-                <button onClick={() => checkPost()}>post</button>
-                <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>
+                {userNameId === "" ? <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> : 
+                    <>
+                        <Link to={'/feed'}><button onClick={() => checkPost()}>post</button></Link> 
+                        <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>
+                    </>}
             </div>
         </div>
     )

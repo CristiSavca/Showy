@@ -10,83 +10,15 @@ app.use(express.json({limit: '50mb'}));
 
 const oneDatabase = new Database(firebaseKey, firebaseURL);
 
-
-// works
-
-// let test1 = await oneDatabase.getUserByUsername("testchange");
-// var user1 = test1._fieldsProto.id.stringValue;
-
-// let test2 = await oneDatabase.getUserById("123");
-// let testuser = test2._fieldsProto.username.stringValue;
-
-// let test3 = await oneDatabase.getUsernameFromId("123");
-
-// let test4 = await oneDatabase.getIdFromUsername("testchange");
-
-// let test5 = await oneDatabase.usernameTaken("testchange");
-
-// can be added multiple times, but on same user so no duplicates seen
-// let test7 = await oneDatabase.addUserFromAuthenticator("hsyEGxb4RKNSxBhy1jXIzmHxXSu2", "jennyton88@gmail.com");
-
-// let test8 = await oneDatabase.changeUsername("123", "testchange2");
-
-//let test9 = await oneDatabase.allowableUsername("123");
-
-//let test10 = await oneDatabase.makePost("testchange2", "testchange2 posted", "wow!");
-
-// not working
-
-// not able to read _fieldsProto // did work pre-merge using db-test.js
-//let test6 = await oneDatabase.addUserToDatabase("tester6", "tester6@email.com", "tester6");
-
-
-// async function testadd() {
-//     return await oneDatabase.addUserToDatabase("test6", "tester777@email.com", "testnum6");
-// }
-
-
-async function test18() {
-    //let testing = await oneDatabase.getIdFromUsername("newuser12345");
-    //let posts = await oneDatabase.getPostsFiltered("poster_id",testing, 10);
-    // const posts = await oneDatabase.getPostsFiltered("username", "newuser12345", 10);
-
-
-    // get by poster id  of posts
-   //const posts = await oneDatabase.getPostsFiltered("poster_id", testing, 10);
-
-
-   // get by certain query
-   //const posts = await oneDatabase.getPostsSorted("poster_id", "desc", 10);
-
-    //const postslist = posts;
-
-    // for (var i = 0; i < posts.length; i ++) {
-    //     const currentPost = posts[i]._fieldsProto;
-    //     const currentPostUser = await oneDatabase.getUserById(currentPost.poster_id.stringValue);
-    //     const posterUsername = currentPostUser._fieldsProto.username.stringValue;
-    //     console.log(currentPost.title.stringValue + " posted by: " + posterUsername + " - " + currentPost.body.stringValue);
-    //     let post = {
-    //         title: currentPost.title.stringValue,
-    //         username: posterUsername,
-    //         body: currentPost.body.stringValue
-    //     };
-    //     postslist.push(post);
-    // }
-
-    //return postslist;
-}
-
-
 app.get("/getUsername", async (req, res) => { 
     let userID = req.query.uid;
     let username = await oneDatabase.getUsernameFromId(userID);
-    //console.log(username);
     res.send(username);
 });
 
 app.get("/getLikesCounter", async (req, res) => {
     let postID = req.query.postId;
-    const postLikesNumber = await oneDatabase.getLikesCounter(postID);
+    let postLikesNumber = await oneDatabase.getLikeCounter(postID);
     res.send(postLikesNumber);
 });
 
@@ -94,7 +26,7 @@ app.get("/getPost", async (req, res) => {
     let postID = req.query.postId;
     const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
     const currentPost = onePost[0]._fieldsProto;
-    let post = {
+    const post = {
         postId: currentPost.id.stringValue,
         username: currentPost.poster_id.stringValue,
         header: currentPost.title.stringValue,
@@ -102,21 +34,25 @@ app.get("/getPost", async (req, res) => {
         likes: currentPost.likes.integerValue
     };
 
-    //console.log(post);
     res.send(post);
 });
 
+app.get("/getUserLiked", async (req, res) => {
+    let postID = req.query.postId;
+    let userID = req.query.username;
+    const liked = await oneDatabase.userLiked(postID, userID);
+
+    res.send(liked);
+});
+
 app.get("/getPosts", async (req, res) => {
-    const posts = await oneDatabase.getPostsSorted("poster_id", "desc", -1);
+    const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
     const postsList = [];
-    //console.log(posts[0]);
 
     for (let i = 0; i < posts.length; i++) {
         const currentPost = posts[i]._fieldsProto;
-        const currentPostUser = await oneDatabase.getUserById(currentPost.poster_id.stringValue);
-        //const posterUsername = currentPostUser._fieldsProto.username.stringValue;
-        //console.log(currentPost.title.stringValue + " posted by:" + currentPost.poster_id.stringValue + " - " + currentPost.body.stringValue);
-        let post = {
+        
+        const post = {
             postId: currentPost.id.stringValue,
             username: currentPost.poster_id.stringValue,
             header: currentPost.title.stringValue,
@@ -126,29 +62,23 @@ app.get("/getPosts", async (req, res) => {
         postsList.push(post);
     }
 
-    //console.log(postsList);
     res.send(postsList);
 });
 
-app.patch("/addLike", async (req, res) => {
-    // let userID = req.query.uid;
-    // let username = await oneDatabase.getUsernameFromId(userID);
-    // Get username
-    // get post id
-    // add like
+app.post("/addLike", async (req, res) => {
+    let postID = req.body.params.postId;
+    let userID = req.body.params.username;
 
-    // let post = req.body;
-    // let postID = post.postId;
-    // let user = 
-    // let addLike = await oneDatabase.incrementLikes(postId, userId);
-    
+    let incrementedLike = await oneDatabase.incrementLikes(postID, userID);
+    res.send(incrementedLike);
 });
 
-app.patch("removeLike", async (req, res) => {
-    
-    // get username
-    // get post id
-    // remove the like
+app.post("/removeLike", async (req, res) => {
+    let postID = req.body.params.postId;
+    let userID = req.body.params.username;
+
+    let decrementedLike = await oneDatabase.decrementLikes(postID, userID);
+    res.send(decrementedLike);
 });
 
 app.post("/createPost", async (req, res) => {
