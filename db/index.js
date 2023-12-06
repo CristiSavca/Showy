@@ -53,10 +53,9 @@ app.get("/getPosts", async (req, res) => {
     let currentPost;
 
     for (let i = 0; i < posts.length; i++) {
-        currentPost = posts[i]._fieldsProto;
-        const currentPostUser = await oneDatabase.getUserById(currentPost.poster_id.stringValue);
-
-        post = {
+        const currentPost = posts[i]._fieldsProto;
+        
+        const post = {
             postId: currentPost.id.stringValue,
             username: currentPost.poster_id.stringValue,
             header: currentPost.title.stringValue,
