@@ -4,7 +4,7 @@ import Axios from 'axios';
 const CreateComment = ({userNameId, postId}) => {
     const [username, setUsername] = useState();
     const [comment, setComment] = useState("");
-    const [headerComment, setHeaderComment] = useState();
+    const [headerComment, setHeaderComment] = useState("");
     //const [createdComment, setCreatedComment] = useState(false);
 
     useEffect(() => {
@@ -37,6 +37,8 @@ const CreateComment = ({userNameId, postId}) => {
         }
         
         createComment();
+        setComment("");
+        setHeaderComment("");
     }
 
 
