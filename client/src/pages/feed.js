@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import FeedPosts from "../components/FeedComponents/FeedPosts";
 
 const Feed = () => {
-    const [postsData, setPostsData] = useState([]);
+    const [postsData, setPostsData] = useState(null);
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
@@ -23,31 +23,6 @@ const Feed = () => {
         getPostsData();
     }, []);
 
-    // const postsData = { // REMOVE THIS WHEN DATABASE FUNCTIONS ARE CONNECTED
-    //     "posts": [
-    //         {
-    //             "key": "Person-What-is-the-future?",
-    //             "username": "Person",
-    //             "header": "What is the future?",
-    //             "postText": "AI", 
-    //             "likes": 0
-    //         },
-    //         {
-    //             "key": "Person2-Dogs-are-good-pets", 
-    //             "username": "Person2", 
-    //             "header": "Dogs are good pets", 
-    //             "postText": "Source? me", 
-    //             "likes": 3
-    //         },
-    //         {
-    //             "key": "Person3-Test", 
-    //             "username": "Person3", 
-    //             "header": "Test", 
-    //             "postText": "123", 
-    //             "likes": 20
-    //         }
-    //     ]
-    // };
 
     return (
         <div>

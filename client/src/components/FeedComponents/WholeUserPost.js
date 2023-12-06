@@ -12,7 +12,6 @@ const WholeUserPost = () => {
 
     const [postData, setPostData] = useState(null);
     const [commentsData, setCommentsData] = useState(null);
-    const [textContent, setTextContent] = useState("");
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
@@ -32,28 +31,21 @@ const WholeUserPost = () => {
       getPostData();
     }, []);
 
-    // useEffect(() => {
-    //   async function getCommentsData() {
-    //     await Axios.get("http://localhost:5000/getComments", {
-    //       params: {
-    //         postId: id
-    //       }
-    //     }).then((response) => {
-    //       setCommentsData(response.data);
-    //     }).catch((error) => {
-    //       console.log(error);
-    //     });
-    //   }
-    // }, []);
-
-    const commentData = [
-      {
-        "username": "Person2",
-        "commentText": "Hello everyone",
-        "likes": 0,
-        "replies": []
+    useEffect(() => {
+      async function getCommentsData() {
+        await Axios.get("http://localhost:5000/getComments", {
+          params: {
+            postId: id
+          }
+        }).then((response) => {
+          setCommentsData(response.data);
+        }).catch((error) => {
+          console.log(error);
+        });
       }
-    ];
+
+      getCommentsData();
+    }, []);
 
     return (
       <div className="whole-post-box">
@@ -72,7 +64,7 @@ const WholeUserPost = () => {
           <CreateComment userNameId={userNameId} postId={id} />
         </div>
         <>
-          {commentData === null ? (<p>Loading...</p>) : <CommentsDisplay commentsData={commentData}/>}
+          {commentsData === null ? <p>Loading...</p> : <CommentsDisplay commentsData={commentsData} currentUsername={userNameId} />}
         </>
       </div>
     )

@@ -90,10 +90,10 @@ app.get("/getComments", async (req, res) => {
             };
             comments.push(commentPostValues);
         }
-
+        //console.log(comments);
         res.send(comments);
     } else {
-        console.log("No comments");
+        //console.log("No comments");
         res.send([]);
     }
 });

@@ -1,15 +1,16 @@
 import Comment from "./Comment";
 
-const CommentsDisplay = ({commentsData}) => {
+const CommentsDisplay = ({commentsData, currentUsername}) => {
     return(
         <div className="comments-display">
-            {(typeof commentsData === "undefined") ? (<p>Loading...</p>)
-            :(commentsData.map((comment) => <Comment key={comment.key}
+            {commentsData === null ? <p>Loading...</p>
+            : commentsData.map((comment) => <Comment key={comment.commentId}
                                                   username={comment.username} 
-                                                      commentText={comment.commentText} 
+                                                    commentHeader={comment.header}
+                                                      commentText={comment.body} 
                                                         likes={comment.likes} 
-                                                            commentId={comment.key}
-                                                                replies={comment.replies}/>)
+                                                            commentId={comment.commentId}
+                                                                    currentUsername={currentUsername} />
           )}
         </div>
     )
