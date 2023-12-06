@@ -13,10 +13,9 @@ const CreateUserPost = () => {
     const [username, setUsername] = useState(null);
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
-    const [createdPost, setCreatedPost] = useState(false);
+    //const [createdPost, setCreatedPost] = useState(false);
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
-
 
     useEffect(() => {
         async function getUsername() {
@@ -55,7 +54,7 @@ const CreateUserPost = () => {
             body: body,
         })
         .then((response) => {
-            setCreatedPost(response);
+            //setCreatedPost(response);
             console.log(response.status);
         }).catch((error) => {
             console.log(error);
