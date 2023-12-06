@@ -8,9 +8,10 @@ import ActivityTracker from '../components/contributions';
 import ProfilePic from '../components/profile_picture';
 import ProfileContainer from '../components/profile_container';
 
-export default function Profile() {
+export default function Profile(currentUser) {
     // State from the second block
-    const currentUser = useAuth();
+    // const currentUser = useAuth();
+    console.log('currentUser', currentUser,currentUser.user.uid, currentUser.uid, currentUser.email);
     const [username, setUsername] = useState(null);
     const [isEditing, setisEditing] = useState(false);
     const [customization, setCustomization] = useState([{
@@ -38,7 +39,7 @@ export default function Profile() {
             const item = customization[i];
             console.log('stringify(item): ', stringify(item), typeof stringify(item))
             stringCustomizations.push(stringify(item));
-            
+
             // stringCustomizations.push(JSON.stringify({
             //     component: <ActivityTracker />,
             //     location: { x: 0, y: 0 }
@@ -48,7 +49,7 @@ export default function Profile() {
             // console.log("STRINGIFY", stringify(customization[i]))
         }
         await Axios.patch('http://localhost:5000/changeCustomizations', {
-            uuid: currentUser.uid,
+            uuid: currentUser.user.uid,
             customizations: stringCustomizations,
         })
             .then((response) => {
@@ -81,7 +82,7 @@ export default function Profile() {
         async function getUsername() {
             await Axios.get("http://localhost:5000/getUsername", {
                 params: {
-                    uid: currentUser?.uid
+                    uid: currentUser.user.uid,
                 }
             }).then((response) => {
                 setUsername(response.data);
@@ -90,41 +91,63 @@ export default function Profile() {
                 console.log(error);
             });
         }
-
         async function getCustomization() {
             await Axios.get("http://localhost:5000/getCustomizations", {
                 params: {
-                    uid: currentUser?.uid
+                    uid: currentUser.user.uid
                 }
             }).then((response) => {
                 //parse the array back to objects from strings
-                let parsed_array = [];
-                for (let i = 0; i < response.data.length; i++) {
-                    // parsed_array.push(jsonc.parse(response.data[i]));
-                    parsed_array.push(parse(response.data[i]));
+                if(response.data){
+                    console.log(true, response.data)
+                    let parsed_array = [];
+                    for (let i = 0; i < response.data.length; i++) {
+                        // parsed_array.push(jsonc.parse(response.data[i]));
+                        parsed_array.push(parse(response.data[i]));
+                    }
+                    setCustomization(parsed_array);
+                }else{
+                    setCustomization([{
+                        component: <ProfilePic />,
+                        location: { x: 0, y: 0 }
+                    },
+                    {
+                        component: <ActivityTracker />,
+                        location: { x: 0, y: 0 }
+                    },])
                 }
-                setCustomization(parsed_array);
+                // let parsed_array = [];
+                // for (let i = 0; i < response.data.length; i++) {
+                //     // parsed_array.push(jsonc.parse(response.data[i]));
+                //     parsed_array.push(parse(response.data[i]));
+                // }
+                
+                // setCustomization(parsed_array);
                 console.log("customizations: ", response.data);
             }).catch((error) => {
                 console.log(error);
             });
         }
-        getUsername();
-        getCustomization();
+        if(currentUser.user.uid){
+            getUsername();
+            getCustomization();
+        }
+
+        
     }, [currentUser]);
 
-    // let example_data = [
-    //     // {component: <h1>{currentUser.email}'s Account</h1>, 
-    //     // location:   {x: 0, y: 0}}, 
-    //     {
-    //         component: <ProfilePic />,
-    //         location: { x: 0, y: 0 }
-    //     },
-    //     {
-    //         component: <ActivityTracker />,
-    //         location: { x: 0, y: 0 }
-    //     },
-    // ]
+    let example_data = [
+        // {component: <h1>{currentUser.email}'s Account</h1>, 
+        // location:   {x: 0, y: 0}}, 
+        {
+            component: 'ProfilePic',
+            location: { x: 0, y: 0 }
+        },
+        {
+            component: 'ActivityTracker',
+            location: { x: 0, y: 0 }
+        },
+    ]
     const setLocation = (index, new_location) => {
         // delete bottom two lines after connect to DB
         // example_data[index].location.x = new_location.lastX;
@@ -145,10 +168,15 @@ export default function Profile() {
 
             {/* Contribution Graph */}
             {currentUser?.email ? <h1> {username ? username : currentUser.email}'s Account</h1> : null}
+            {/* {currentUser?.email ? <h1> {username ? username : currentUser.email}'s Account</h1> : null} */}
             <button onClick={() => toggleEditing()}> {buttonText}</button>
             {/* delete example data line below after connected  */}
             {/* {example_data.map((item, index) => <ProfileContainer parentCallback={setLocation} index={index} disabled={!isEditing} defaultPosition={item.location} component={item.component} />)} */}
+
+
             {customization.map((item, index) => <ProfileContainer parentCallback={setLocation} index={index} disabled={!isEditing} defaultPosition={item.location} component={item.component} />)}
+
+            {/* {example_data.map((item, index) => <ProfileContainer parentCallback={setLocation} index={index} disabled={!isEditing} defaultPosition={item.location} component={'Profile'} />)} */}
             {/* <ProfilePic/> */}
             {/* <ActivityTracker /> */}
         </div>
