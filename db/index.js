@@ -46,7 +46,8 @@ app.get("/getUserLiked", async (req, res) => {
 });
 
 app.get("/getPosts", async (req, res) => {
-    const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
+    // const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
+    const posts = await oneDatabase.getPostFeed("posted", "desc", -1);
     const postsList = [];
 
     let post;
