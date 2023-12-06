@@ -110,7 +110,7 @@ function App() {
             <Navbar />
             <Routes>
                 <Route exact path='/feed' element={<Feed />} />
-                <Route path='/profile' element={currentUser ? <Profile /> : <div>Please sign in to view your profile.</div>} />
+                <Route path='/profile' element={currentUser ? <Profile user={currentUser}/> : <div>Please sign in to view your profile.</div>} />
                 <Route path='/posts/:id' element={<WholeUserPost />} />
                 <Route path='/posts/create-post' element={<CreateUserPost />} />
             </Routes>
