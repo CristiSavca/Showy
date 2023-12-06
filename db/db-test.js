@@ -18,7 +18,7 @@ const dbTest = new Database(firebaseKey, firebaseURL);
 
 var repeat = true;
 while (repeat) {
-	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (aa)dd from auth, (ch)eck post, (lp)ike post, (tc)est customs, (e)xit: ");
+	var userInput = prompt("(a)ccount, (l)og in, (c)hange username, (p)ost, (g)et posts, (f)eed, (aa)dd from auth, (ch)eck post, (lp)ike post, (tc)est customs, (e)xit: ");
 	
 	// CHECK ACCOUNT INFO
 	if (userInput == "a") {
@@ -178,6 +178,17 @@ while (repeat) {
 		customizations = await dbTest.getUserCustomizations(userId);
 		console.log("Current user customizations: ");
 		console.log(customizations);
+	}
+	
+	if (userInput == "f") {
+		var feed = await dbTest.getPostFeed("posted", "desc", 10);
+		
+		for (var i = 0; i < feed.length; i ++) {
+			const currentPost = feed[i]._fieldsProto;
+			const currentPostUser = await dbTest.getUserById(currentPost.poster_id.stringValue);
+			const posterUsername = currentPostUser._fieldsProto.username.stringValue;
+			console.log(currentPost.title.stringValue + " posted by: " + posterUsername + " - " + currentPost.body.stringValue);
+		}
 	}
 	
 	// EXIT
