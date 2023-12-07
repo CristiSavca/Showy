@@ -7,7 +7,6 @@ import FeedPosts from "../components/FeedComponents/FeedPosts";
 
 const Feed = () => {
     const [postsData, setPostsData] = useState(null);
-
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
     useEffect(() => {
@@ -23,14 +22,16 @@ const Feed = () => {
         getPostsData();
     }, []);
 
-
     return (
         <div>
             <h1>
                 Welcome to the feed!
             </h1>
-            {userNameId === '' ? <p>Sign in to create posts</p> : <Link to={`/posts/create-post`}><button className="create-post-button">Create post</button></Link>}
-            {postsData && <FeedPosts postsData={postsData} currentUsername={userNameId} />}
+            {userNameId === "" ? 
+                <p>Sign in to create posts</p> 
+                : <Link to={`/posts/create-post`}><button className="create-post-button">Create post</button></Link>
+            }
+            {postsData === null ? <p>Loading...</p> : <FeedPosts postsData={postsData} currentUsername={userNameId} />}
         </div>
     );
 };
