@@ -6,7 +6,7 @@ import Axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { signup, login, logout, useAuth } from "./firebase";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { saveUsernameId } from './redux/slices/saveUsernameSlice';
 
 import './App.css';
@@ -28,9 +28,8 @@ function App() {
     const responseMessage = response => console.log(response);
     const errorMessage = error => console.log(error);
 
-    // Used to get displayed username
+    // Dispatch to save uid
     const dispatch = useDispatch();
-    const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
     async function handleSignup() {
         setLoading(true);
