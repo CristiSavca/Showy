@@ -45,7 +45,7 @@ const Comment = ({username, commentHeader, commentText, likes, commentId, curren
                 <p>{commentHeader}</p>
                 <p>{commentText}</p>
                 
-                <LikeButton currentLikes={likes} objType={"post"} objId={commentId} currentUsername={currentUsername} />
+                <LikeButton currentLikes={likes} objId={commentId} currentUsername={currentUsername} />
             </>
             <>
                 {replyContent}
