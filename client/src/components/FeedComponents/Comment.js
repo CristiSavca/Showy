@@ -9,6 +9,8 @@ const Comment = ({username, commentHeader, commentText, likes, commentId, curren
     const [clickedReply, setClickedReply] = useState(false);
     const [repliesData, setRepliesData] = useState(null);
 
+    const [posted, setPosted] = useState(false);
+
     // Display editable comment box or reply button
     let replyContent;
 
@@ -26,18 +28,21 @@ const Comment = ({username, commentHeader, commentText, likes, commentId, curren
         }
   
         getCommentsData();
-    }, []);
-  
+    }, [posted]);
+
+    function postedComment() {
+      setPosted(!posted);
+    }
 
     if (!clickedReply) {
         replyContent = <button onClick={() => {setClickedReply(true)}}>reply</button>
     } else {
         replyContent = <>
-            <CreateComment userNameId={currentUsername} postId={commentId} />
+            <CreateComment userNameId={currentUsername} postId={commentId} postedC={postedComment}/>
             <button onClick={() => {setClickedReply(false)}}>cancel</button>
         </>
     }
-    
+
     return (
         <div className="comment">
             <>

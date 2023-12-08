@@ -12,6 +12,7 @@ const WholeUserPost = () => {
 
     const [postData, setPostData] = useState(null);
     const [commentsData, setCommentsData] = useState(null);
+    const [posted, setPosted] = useState(false);
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
@@ -45,7 +46,11 @@ const WholeUserPost = () => {
       }
 
       getCommentsData();
-    }, []);
+    }, [posted]);
+
+    function postedComment() {
+      setPosted(!posted);
+    }
 
     return (
       <div className="whole-post-box">
@@ -61,7 +66,7 @@ const WholeUserPost = () => {
         }
         
         <div className="whole-post-comment-box">
-          <CreateComment userNameId={userNameId} postId={id} />
+          <CreateComment userNameId={userNameId} postId={id} postedC={postedComment} />
         </div>
         <>
           {commentsData === null ? <p>Loading...</p> : <CommentsDisplay commentsData={commentsData} currentUsername={userNameId} />}

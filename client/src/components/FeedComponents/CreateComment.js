@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Axios from 'axios';
 
-const CreateComment = ({userNameId, postId}) => {
+const CreateComment = ({userNameId, postId, postedC}) => {
     const [comment, setComment] = useState("");
     const [headerComment, setHeaderComment] = useState("");
 
@@ -23,6 +23,7 @@ const CreateComment = ({userNameId, postId}) => {
                 body: comment,
             }).then((response) => {
                 console.log(response.status);
+                postedC();
             }).catch((error) => {
                 console.log(error);
             });
