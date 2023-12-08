@@ -18,8 +18,8 @@ import WholeUserPost from './components/FeedComponents/WholeUserPost';
 import CreateUserPost from './components/FeedComponents/CreateUserPost';
 
 function App() {
-    // State and ref from the second block
     const [loading, setLoading] = useState(false);
+    const [isSigningUp, setIsSigningUp] = useState(false);
     const currentUser = useAuth();
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -79,10 +79,47 @@ function App() {
     function getUser() {
         dispatch(saveUsernameId(currentUser.uid));
     }
+    const toggleSignUp = () => setIsSigningUp(!isSigningUp);
+
+    if (!currentUser) {
+        return (
+            <div id="login-container">
+                <div className="login-box">
+                    {isSigningUp ? (
+                        <>
+                            <h1>Create New Account</h1>
+                            <div className="fields">
+                                <input ref={emailRef} placeholder="Email address" />
+                                <input ref={passwordRef} type="password" placeholder="Password" />
+                            </div>
+                            <button className="signup-btn" disabled={loading} onClick={handleSignup}>Sign Up</button>
+                            <button className="switch-btn" onClick={toggleSignUp}>Already have an account? Log in</button>
+                        </>
+                    ) : (
+                        <>
+                            <h1>Welcome to Showy!</h1>
+                            <div className="fields">
+                                <input ref={emailRef} placeholder="Email address" />
+                                <input ref={passwordRef} type="password" placeholder="Password" />
+                            </div>
+                            <button className="login-btn" onClick={handleLogin}>Log In</button>
+                            <div className="separator">or</div>
+                            <button className="switch-btn" onClick={toggleSignUp}>Create New Account</button>
+                            <div className="google-login">
+                                <GoogleLogin
+                                    onSuccess={responseMessage}
+                                     onError={errorMessage}
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <Router>
-            {/* From the second block */}
             <div id="main">
                 <div>Currently logged in as: {currentUser?.email}</div>
                 {!currentUser && (
@@ -101,12 +138,7 @@ function App() {
 
                 {currentUser && getUser()}
             </div>
-            <div>
-                <br />
-                <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
-            </div>
 
-            {/* From the first block */}
             <Navbar />
             <Routes>
                 <Route exact path='/feed' element={<Feed />} />
