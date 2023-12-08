@@ -6,35 +6,34 @@ const LikeButton = ({objId, currentLikes, currentUsername}) => {
     const [totalLikes, setLikes] = useState(Number(currentLikes));
 
     useEffect(() => {
+        async function getUserLike() {
+            await Axios.get("http://localhost:5000/getUserLiked", {
+                params: {
+                    postId: objId,
+                    username: currentUsername
+                }
+            }).then((response) => {
+                setLikedObject(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
+        async function getUpdatedLikes() {
+            await Axios.get("http://localhost:5000/getLikesCounter", {
+                params: {
+                    postId: objId
+                }
+            }).then((response) => {
+                setLikes(response.data);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+
         getUserLike();
-    }, []);
-
-    async function getUpdatedLikes() {
-        await Axios.get("http://localhost:5000/getLikesCounter", {
-            params: {
-                postId: objId
-            }
-        }).then((response) => {
-            setLikes(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
-    async function getUserLike() {
-        await Axios.get("http://localhost:5000/getUserLiked", {
-            params: {
-                postId: objId,
-                username: currentUsername
-            }
-        }).then((response) => {
-            setLikedObject(response.data);
-        }).catch((error) => {
-            console.log(error);
-        });
-
         getUpdatedLikes();
-    }
+    }, []);
 
     async function dislike() {
         await Axios.post("http://localhost:5000/removeLike", {
