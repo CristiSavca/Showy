@@ -145,3 +145,96 @@ input,
 .create-post-button{
   margin-bottom:10px;
 }
+
+#login-container, #signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #282c34;
+}
+
+.login-box, .signup-box {
+  width: 400px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border-radius: 8px;
+}
+
+.login-box h1, .signup-box h1 {
+  font-size: 28px;
+  color: #4b4f56;
+  margin-bottom: 10px;
+}
+
+.fields input {
+  width: 100%;
+  margin: 5px 0;
+  padding: 14px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.login-btn, .signup-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn {
+  background-color: #1877f2;
+  color: white;
+}
+
+.signup-btn {
+  background-color: #42b72a;
+  color: white;
+}
+
+.separator {
+  margin: 20px 0;
+  color: #606770;
+}
+
+.google-login {
+  margin-top: 10px;
+}
+
+.google-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.google-login button:hover {
+  box-shadow: 0 0 6px #4285F4;
+}
+
+.google-login button:active {
+  background: #1669F2;
+}
+
+.google-login img {
+  margin-right: 10px;
+}
+
+.switch-btn {
+  background-color: transparent;
+  color: #1877f2;
+  border: none;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.switch-btn:hover {
+  text-decoration: underline;
+}
