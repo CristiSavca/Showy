@@ -27,6 +27,7 @@ const CreateUserPost = () => {
             })
             .then((response) => {
                 console.log(response.status);
+                alert("Successful post!");
             }).catch((error) => {
                 console.log(error);
             });
@@ -52,10 +53,12 @@ const CreateUserPost = () => {
                 {userNameId === "" ? 
                     <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> 
                     : <>
-                        <Link to={'/feed'}><button onClick={() => checkPost()}>post</button></Link> 
+                        <button onClick={() => checkPost()}>post</button>
                         <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>
                     </>
                 }
+
+                <Link to={'/feed'}><button>return to feed</button></Link>
             </div>
         </div>
     )
