@@ -11,19 +11,19 @@ app.use(express.json({limit: '50mb'}));
 const oneDatabase = new Database(firebaseKey, firebaseURL);
 
 app.get("/getUsername", async (req, res) => { 
-    let userID = req.query.uid;
-    let username = await oneDatabase.getUsernameFromId(userID);
+    const userID = req.query.uid;
+    const username = await oneDatabase.getUsernameFromId(userID);
     res.send(username);
 });
 
 app.get("/getLikesCounter", async (req, res) => {
-    let postID = req.query.postId;
-    let postLikesNumber = await oneDatabase.getLikeCounter(postID);
+    const postID = req.query.postId;
+    const postLikesNumber = await oneDatabase.getLikeCounter(postID);
     res.send(postLikesNumber);
 });
 
 app.get("/getPost", async (req, res) => {
-    let postID = req.query.postId;
+    const postID = req.query.postId;
     const onePost = await oneDatabase.getPostsFiltered("id", postID, 1);
     const currentPost = onePost[0]._fieldsProto;
     const post = {
@@ -38,21 +38,25 @@ app.get("/getPost", async (req, res) => {
 });
 
 app.get("/getUserLiked", async (req, res) => {
-    let postID = req.query.postId;
-    let userID = req.query.username;
+    const postID = req.query.postId;
+    const userID = req.query.username;
     const liked = await oneDatabase.userLiked(postID, userID);
 
     res.send(liked);
 });
 
 app.get("/getPosts", async (req, res) => {
-    const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
+    // const posts = await oneDatabase.getPostsSorted("posted", "desc", -1);
+    const posts = await oneDatabase.getPostFeed("posted", "desc", -1);
     const postsList = [];
 
+    let post;
+    let currentPost;
+
     for (let i = 0; i < posts.length; i++) {
-        const currentPost = posts[i]._fieldsProto;
-        
-        const post = {
+        currentPost = posts[i]._fieldsProto;
+
+        post = {
             postId: currentPost.id.stringValue,
             username: currentPost.poster_id.stringValue,
             header: currentPost.title.stringValue,
@@ -65,26 +69,63 @@ app.get("/getPosts", async (req, res) => {
     res.send(postsList);
 });
 
-app.post("/addLike", async (req, res) => {
-    let postID = req.body.params.postId;
-    let userID = req.body.params.username;
+app.get("/getComments", async (req, res) => {
+    const postID = req.query.postId;
 
-    let incrementedLike = await oneDatabase.incrementLikes(postID, userID);
+    const commentIDs = await oneDatabase.getReplies(postID);
+
+    if (commentIDs.length !== 0) {
+        const comments = [];
+        let comment = "";
+        let commentPost;
+        let commentPostValues;
+        for (let i = 0; i < commentIDs.length; i++) {
+            comment = await oneDatabase.getPostById(commentIDs[i].stringValue);
+            commentPost = comment._fieldsProto;
+            commentPostValues = {
+                commentId: commentPost.id.stringValue,
+                username: commentPost.poster_id.stringValue,
+                header: commentPost.title.stringValue,
+                body: commentPost.body.stringValue,
+                likes: commentPost.likes.integerValue,
+            };
+            comments.push(commentPostValues);
+        }
+        //console.log(comments);
+        res.send(comments);
+    } else {
+        //console.log("No comments");
+        res.send([]);
+    }
+});
+
+app.post("/addLike", async (req, res) => {
+    const postID = req.body.params.postId;
+    const userID = req.body.params.username;
+
+    const incrementedLike = await oneDatabase.incrementLikes(postID, userID);
     res.send(incrementedLike);
 });
 
 app.post("/removeLike", async (req, res) => {
-    let postID = req.body.params.postId;
-    let userID = req.body.params.username;
+    const postID = req.body.params.postId;
+    const userID = req.body.params.username;
 
-    let decrementedLike = await oneDatabase.decrementLikes(postID, userID);
+    const decrementedLike = await oneDatabase.decrementLikes(postID, userID);
     res.send(decrementedLike);
 });
 
 app.post("/createPost", async (req, res) => {
-    let post = req.body;
-    let posted = await oneDatabase.makePost(post.username, post.header, post.body);
+    const post = req.body;
+    const posted = await oneDatabase.makePost(post.username, post.header, post.body);
     res.send(posted);
+});
+
+app.post("/createComment", async (req, res) => {
+    const comment = req.body;
+    const commented = await oneDatabase.replyToPost(comment.postId, comment.posterId, comment.title, comment.body);
+
+    res.send(commented);
 });
 
 app.patch("/changeCustomizations", async (req, res) => {
@@ -99,4 +140,4 @@ app.get("/getCustomizations", async (req, res) => {
     res.send(custom);
 });
 
-app.listen(5000, () => {console.log("app is running")});
+app.listen(5000, () => {console.log("app is running on port 5000")});

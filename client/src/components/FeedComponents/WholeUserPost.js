@@ -11,7 +11,8 @@ const WholeUserPost = () => {
     const { id } = useParams();
 
     const [postData, setPostData] = useState(null);
-    const [textContent, setTextContent] = useState("");
+    const [commentsData, setCommentsData] = useState(null);
+    const [posted, setPosted] = useState(false);
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
@@ -31,46 +32,25 @@ const WholeUserPost = () => {
       getPostData();
     }, []);
 
-    const commentsData = [
-      {
-        "username": "Person2",
-        "commentText": "Hello everyone",
-        "likes": 0,
-        "replies": [
-          {
-            "username": "Person1",
-            "commentText": "This is a reply",
-            "likes": 0,
-            "replies": [
-              {
-                "username": "Person98989",
-                "commentText": "This is a reply to a reply",
-                "likes": 0,
-                "replies": []
-              }
-            ]
-          },
-          {
-            "username": "Person8",
-            "commentText": "This is a reply112112",
-            "likes": 0,
-            "replies": []
-          },
-          {
-            "username": "Person1",
-            "commentText": "This is a reply 9898989 ",
-            "likes": 0,
-            "replies": []
+    useEffect(() => {
+      async function getCommentsData() {
+        await Axios.get("http://localhost:5000/getComments", {
+          params: {
+            postId: id
           }
-        ]
-      },
-      {
-        "username": "Person3",
-        "commentText": "Hello world",
-        "likes": 0,
-        "replies": []
+        }).then((response) => {
+          setCommentsData(response.data);
+        }).catch((error) => {
+          console.log(error);
+        });
       }
-    ]
+
+      getCommentsData();
+    }, [posted]);
+
+    function postedComment() {
+      setPosted(!posted);
+    }
 
     return (
       <div className="whole-post-box">
@@ -85,12 +65,11 @@ const WholeUserPost = () => {
 
         }
         
-        {/* NEED TO UPDATE COMMENTS */}
         <div className="whole-post-comment-box">
-          <CreateComment />
+          <CreateComment userNameId={userNameId} postId={id} postedC={postedComment} />
         </div>
         <>
-          <CommentsDisplay commentsData={commentsData}/>
+          {commentsData === null ? <p>Loading...</p> : <CommentsDisplay commentsData={commentsData} currentUsername={userNameId} />}
         </>
       </div>
     )

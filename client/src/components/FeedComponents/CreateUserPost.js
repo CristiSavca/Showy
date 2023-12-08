@@ -1,88 +1,64 @@
-
-// TODO
-// Rename css div
-
 import Axios from 'axios';
-
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
 import { useSelector } from 'react-redux';
 
 const CreateUserPost = () => {
-    const [username, setUsername] = useState(null);
     const [header, setHeader] = useState("");
     const [body, setBody] = useState("");
-    const [createdPost, setCreatedPost] = useState(false);
 
     const userNameId = useSelector((state) => state.saveUsername.usernameId);
 
-
     useEffect(() => {
-        async function getUsername() {
-            await Axios.get("http://localhost:5000/getUsername", {
-                params: {
-                    uid: userNameId
-                }
-            }).then((response) => {
-                //dispatch(saveUsername(response.data));
-                setUsername(response.data);
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-
         clearPost();
-        if (userNameId !== "") { 
-            getUsername();
-        } else {
-            clearPost();
-        }
-    }, [userNameId]);
+    }, []);
 
     function checkPost() {
         if (header === "" || body === "") {
             alert("Please fill out post first.");
-        } else {
-            createPost();
+            return;
         }
+
+        async function createPost() {
+            await Axios.post('http://localhost:5000/createPost', {
+                username: userNameId,
+                header: header,
+                body: body,
+            })
+            .then((response) => {
+                console.log(response.status);
+                alert("Successful post!");
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+            
+        createPost();
+        clearPost();
     }
     
-    async function createPost() {
-        await Axios.post('http://localhost:5000/createPost', {
-            username: username,
-            header: header,
-            body: body,
-        })
-        .then((response) => {
-            setCreatedPost(response);
-            console.log(response.status);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
     function clearPost() {
-        setUsername(null);
         setHeader("");
         setBody("");
     }
 
     return (
         <div className="post-box">
-            {username && <p>Username: {username}</p>}
-            <label>Header:</label> 
-            <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} required />
+            {userNameId === "" ? <p>Loading...</p> : <p>Username ID: {userNameId}</p>}
+            <textarea className="header" value={header} onChange={e => setHeader(e.target.value)} placeholder="Header" />
             <div className="post-content">
-                <label>Text:</label> 
-                <textarea className="userText" value={body} onChange={e => setBody(e.target.value)} required />
+                <textarea className="userText" value={body} onChange={e => setBody(e.target.value)} placeholder="Body" />
             </div>
             <div className="bottom-content">
-                {userNameId === "" ? <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> : 
-                    <>
-                        <Link to={'/feed'}><button onClick={() => checkPost()}>post</button></Link> 
+                {userNameId === "" ? 
+                    <Link to={'/feed'}><button>return to feed, you can't post at this time</button></Link> 
+                    : <>
+                        <button onClick={() => checkPost()}>post</button>
                         <Link to={'/feed'}><button onClick={() => clearPost()}>cancel</button></Link>
-                    </>}
+                    </>
+                }
+
+                <Link to={'/feed'}><button>return to feed</button></Link>
             </div>
         </div>
     )

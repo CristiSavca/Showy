@@ -1,36 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Axios from 'axios';
 
 import CreateComment from './CreateComment';
 import LikeButton from './LikeButton';
 import CommentsDisplay from "./CommentsDisplay";
 
-const Comment = ({username, commentText, likes, commentId, replies}) => {
+const Comment = ({username, commentHeader, commentText, likes, commentId, currentUsername}) => {
     const [clickedReply, setClickedReply] = useState(false);
+    const [repliesData, setRepliesData] = useState(null);
+
+    const [posted, setPosted] = useState(false);
 
     // Display editable comment box or reply button
     let replyContent;
+
+    useEffect(() => {
+        async function getCommentsData() {
+          await Axios.get("http://localhost:5000/getComments", {
+            params: {
+              postId: commentId
+            }
+          }).then((response) => {
+            setRepliesData(response.data);
+          }).catch((error) => {
+            console.log(error);
+          });
+        }
+  
+        getCommentsData();
+    }, [posted]);
+
+    function postedComment() {
+      setPosted(!posted);
+    }
 
     if (!clickedReply) {
         replyContent = <button onClick={() => {setClickedReply(true)}}>reply</button>
     } else {
         replyContent = <>
-            <CreateComment />
+            <CreateComment userNameId={currentUsername} postId={commentId} postedC={postedComment}/>
             <button onClick={() => {setClickedReply(false)}}>cancel</button>
         </>
     }
-    
+
     return (
         <div className="comment">
             <>
                 <strong>{username}</strong>
+                <p>{commentHeader}</p>
                 <p>{commentText}</p>
-                <LikeButton currentLikes={likes} /> { /* TODO add id prop to like button */}
+                
+                <LikeButton currentLikes={likes} objId={commentId} currentUsername={currentUsername} />
             </>
             <>
                 {replyContent}
             </>
             <>
-                <CommentsDisplay commentsData={replies}/>
+                {repliesData && <CommentsDisplay commentsData={repliesData} currentUsername={currentUsername} />}
             </>
         </div>
     )

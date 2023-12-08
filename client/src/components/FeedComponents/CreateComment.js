@@ -1,19 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Axios from 'axios';
 
-//  add {username, commentTo} back as prop
-const CreateComment = () => {
+const CreateComment = ({userNameId, postId, postedC}) => {
     const [comment, setComment] = useState("");
-    const [completedComment, setCompletedComment] = useState("");
+    const [headerComment, setHeaderComment] = useState("");
 
-    // TODO REPLACE WITH DB FUNCTION for saving comment to user
-    async function saveComment() {
+    useEffect(() => {
+        clearComment();
+    }, []);
 
+    function checkComment() {
+        if (headerComment === "" || comment === "") {
+            alert("Please fill out the comment first.");
+            return;
+        }
+
+        async function createComment() {
+            await Axios.post('http://localhost:5000/createComment', {
+                postId: postId,
+                posterId: userNameId,
+                title: headerComment,
+                body: comment,
+            }).then((response) => {
+                console.log(response.status);
+                postedC();
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+        
+        createComment();
+        clearComment();
+    }
+
+    function clearComment() {
+        setComment("");
+        setHeaderComment("");
     }
 
     return (
         <>
-            <textarea className="comment-textarea" value={comment} onChange={e => setComment(e.target.value)} required></textarea>
-            <button onClick={() => {saveComment()}}>comment</button>
+            <textarea value={headerComment} onChange={e => setHeaderComment(e.target.value)} placeholder="Header"></textarea>
+            <textarea className="comment-textarea" value={comment} onChange={e => setComment(e.target.value)} placeholder="Body"></textarea>
+            {userNameId === "" || userNameId === null ? 
+                <button onClick={() => {alert("Log in first")}}>log in to comment</button> 
+                : <button onClick={() => {checkComment()}}>comment</button>
+            }
         </>
     )
 }
