@@ -130,7 +130,7 @@ function App() {
    return (
        <Router>
            <div id="main">
-               <div>{currentUser?.email}</div>
+               {/* <div>{currentUser?.email}</div> */}
                {!currentUser && (
                    <>
                        <div className="fields">
@@ -141,7 +141,7 @@ function App() {
                        <button disabled={loading} onClick={handleLogin}>Log In</button>
                    </>
                )}
-               <div className="logout-container">
+               {/* <div className="logout-container">
                 {currentUser && (
                     <button
                         disabled={loading || !currentUser}
@@ -151,7 +151,7 @@ function App() {
                     Log Out
                     </button>
                     )}
-            </div>
+            </div> */}
 
 
                {currentUser && getUser()}
