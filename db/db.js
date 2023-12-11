@@ -397,7 +397,7 @@ class Database {
 		await user.update({
 			customizations: FieldValue.delete()
 		});
-		
+		// console.log('newCustomsArr', newCustomsArr)
 		for (var i = 0; i < newCustomsArr.length; i ++) {
 			await user.update({
 				customizations: FieldValue.arrayUnion(newCustomsArr[i])

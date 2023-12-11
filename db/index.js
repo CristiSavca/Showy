@@ -130,7 +130,9 @@ app.post("/createComment", async (req, res) => {
 
 app.patch("/changeCustomizations", async (req, res) => {
     let info = req.body;
-    let custom = await oneDatabase.overwriteUserCustomizations(info.uuid, req.customizations);
+    // console.log('req.customizations', req.customizations, req)
+    let custom = await oneDatabase.overwriteUserCustomizations(info.uuid, req);
+    // let custom = await oneDatabase.overwriteUserCustomizations(info.uuid, req.customizations);
     res.send(custom);
 });
 

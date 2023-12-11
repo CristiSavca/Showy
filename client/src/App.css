@@ -254,6 +254,9 @@ input,
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
+  position:absolute;
+  right:10px; 
+  top: 30px
 }
 
 .logout-button:hover {
