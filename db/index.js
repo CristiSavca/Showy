@@ -140,4 +140,11 @@ app.get("/getCustomizations", async (req, res) => {
     res.send(custom);
 });
 
+app.post("/addUserFromAuthenticator", async (req, res) => {
+    const { uuid, email } = req.body;
+    const added = await oneDatabase.addUserFromAuthenticator(uuid, email);
+    res.send(added);
+ }); 
+
 app.listen(5000, () => {console.log("app is running on port 5000")});
+//app.listen(5001, () => {console.log("app is running on port 5001")});
