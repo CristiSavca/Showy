@@ -141,9 +141,17 @@ function App() {
                        <button disabled={loading} onClick={handleLogin}>Log In</button>
                    </>
                )}
-               {currentUser && (
-                   <button disabled={loading || !currentUser} onClick={handleLogout}>Log Out</button>
-               )}
+               <div className="logout-container">
+                {currentUser && (
+                    <button
+                        disabled={loading || !currentUser}
+                        onClick={handleLogout}
+                        className="logout-button"
+                    >
+                    Log Out
+                    </button>
+                    )}
+            </div>
 
 
                {currentUser && getUser()}
