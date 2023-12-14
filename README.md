@@ -1,4 +1,4 @@
-#Steps to run the project:
+Steps to run the project:
 1. Open terminal and git clone the repo
 2. cd into the db folder of the project
 3. Run the command “npm install” (without the quotes)
